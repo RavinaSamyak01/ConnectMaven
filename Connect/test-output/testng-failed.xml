@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="Failed suite [ConnectSuite]" guice-stage="DEVELOPMENT">
+  <test thread-count="5" name="UserPreference(failed)">
+    <classes>
+      <class name="samyak_Preferences.UserPreference">
+        <methods>
+          <include name="startUp"/>
+          <include name="testMethodName"/>
+          <include name="login"/>
+          <include name="userPreference"/>
+          <include name="logOut"/>
+          <include name="closeBrowser"/>
+          <include name="getResult"/>
+        </methods>
+      </class> <!-- samyak_Preferences.UserPreference -->
+    </classes>
+  </test> <!-- UserPreference(failed) -->
+</suite> <!-- Failed suite [ConnectSuite] -->

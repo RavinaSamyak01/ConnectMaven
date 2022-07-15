@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testng-results ignored="0" total="1" passed="1" failed="0" skipped="0">
+  <reporter-output>
+  </reporter-output>
+  <suite started-at="2022-04-01T14:27:33 IST" name="ConnectSuite" finished-at="2022-04-01T14:28:36 IST" duration-ms="62640">
+    <groups>
+    </groups>
+    <test started-at="2022-04-01T14:27:33 IST" name="UserPreference" finished-at="2022-04-01T14:28:36 IST" duration-ms="62640">
+      <class name="samyak_Preferences.UserPreference">
+        <test-method is-config="true" signature="startUp()[pri:0, instance:samyak_Preferences.UserPreference@71a8adcf]" started-at="2022-04-01T14:27:31 IST" name="startUp" finished-at="2022-04-01T14:27:33 IST" duration-ms="2660" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- startUp -->
+        <test-method is-config="true" signature="login()[pri:0, instance:samyak_Preferences.UserPreference@71a8adcf]" started-at="2022-04-01T14:27:33 IST" name="login" finished-at="2022-04-01T14:28:09 IST" duration-ms="35767" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- login -->
+        <test-method is-config="true" signature="testMethodName(java.lang.reflect.Method)[pri:0, instance:samyak_Preferences.UserPreference@71a8adcf]" started-at="2022-04-01T14:28:09 IST" name="testMethodName" finished-at="2022-04-01T14:28:09 IST" duration-ms="16" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void samyak_Preferences.UserPreference.userPreference()]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testMethodName -->
+        <test-method signature="userPreference()[pri:0, instance:samyak_Preferences.UserPreference@71a8adcf]" started-at="2022-04-01T14:28:09 IST" name="userPreference" finished-at="2022-04-01T14:28:21 IST" duration-ms="11417" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- userPreference -->
+        <test-method is-config="true" signature="getResult(org.testng.ITestResult)[pri:0, instance:samyak_Preferences.UserPreference@71a8adcf]" started-at="2022-04-01T14:28:21 IST" name="getResult" finished-at="2022-04-01T14:28:21 IST" duration-ms="1" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[[TestResult name=userPreference status=SUCCESS method=UserPreference.userPreference()[pri:0, instance:samyak_Preferences.UserPreference@71a8adcf] output={null}]]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- getResult -->
+        <test-method is-config="true" signature="logOut()[pri:0, instance:samyak_Preferences.UserPreference@71a8adcf]" started-at="2022-04-01T14:28:21 IST" name="logOut" finished-at="2022-04-01T14:28:36 IST" duration-ms="15321" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- logOut -->
+        <test-method is-config="true" signature="closeBrowser()[pri:0, instance:samyak_Preferences.UserPreference@71a8adcf]" started-at="2022-04-01T14:28:36 IST" name="closeBrowser" finished-at="2022-04-01T14:28:37 IST" duration-ms="568" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- closeBrowser -->
+      </class> <!-- samyak_Preferences.UserPreference -->
+    </test> <!-- UserPreference -->
+  </suite> <!-- ConnectSuite -->
+</testng-results>
