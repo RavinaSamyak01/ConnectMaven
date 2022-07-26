@@ -63,7 +63,7 @@ public class P3P extends ServiceDetail {
 
 		String pck = driver.findElement(By.xpath("//*[@id='lblPickup']/span/b")).getText();
 		System.out.println("Service P3P :: Pickup # " + pck);
-		logger.info("Service P3P :: Pickup # " + pck + "\n");
+		logs.info("Service P3P :: Pickup # " + pck + "\n");
 		Thread.sleep(1000);
 		ExcelDataProvider excelDataProvider = new ExcelDataProvider();
 		excelDataProvider.writeData("Sheet1", 3, 32, pck);

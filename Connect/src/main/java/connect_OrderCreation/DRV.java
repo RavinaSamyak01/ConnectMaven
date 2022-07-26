@@ -40,7 +40,7 @@ public class DRV extends ServiceDetail {
 
 		String pck = driver.findElement(By.xpath("//*[@id='lblPickup']/span/b")).getText();
 		System.out.println("Service DRV :: Pickup # " + pck);
-		logger.info("Service DRV :: Pickup # " + pck + "\n");
+		logs.info("Service DRV :: Pickup # " + pck + "\n");
 		Thread.sleep(1000);
 
 		ExcelDataProvider excelDataProvider = new ExcelDataProvider();

@@ -60,7 +60,7 @@ public class FRA extends ServiceDetail {
 
 		String pck = driver.findElement(By.xpath("//*[@id='lblPickup']/span/b")).getText();
 		System.out.println("Service FRA :: Pickup # " +pck);
-		logger.info("Service FRA :: Pickup # "+ pck + "\n");
+		logs.info("Service FRA :: Pickup # "+ pck + "\n");
 		Thread.sleep(1000);
 		ExcelDataProvider excelDataProvider = new ExcelDataProvider();
 		excelDataProvider.writeData("Sheet1", 8, 32, pck);

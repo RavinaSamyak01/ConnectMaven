@@ -41,7 +41,7 @@ public class SD extends ServiceDetail {
 
 		String pck = driver.findElement(By.xpath("//*[@id='lblPickup']/span/b")).getText();
 		System.out.println("Service SD :: Pickup # " + pck);
-		logger.info("Service SD :: Pickup # " + pck + "\n");
+		logs.info("Service SD :: Pickup # " + pck + "\n");
 
 		Thread.sleep(1000);
 

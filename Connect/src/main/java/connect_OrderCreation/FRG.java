@@ -35,7 +35,7 @@ public class FRG extends ServiceDetail {
 
 		String pck = driver.findElement(By.xpath("//*[@id='lblPickup']/span/b")).getText();
 		System.out.println("Service FRG :: Pickup # " + pck);
-		logger.info("Service FRG :: Pickup # " + pck + "\n\n\n");
+		logs.info("Service FRG :: Pickup # " + pck + "\n\n\n");
 		Thread.sleep(1000);
 		ExcelDataProvider excelDataProvider = new ExcelDataProvider();
 		excelDataProvider.writeData("Sheet1", 9, 32, pck);

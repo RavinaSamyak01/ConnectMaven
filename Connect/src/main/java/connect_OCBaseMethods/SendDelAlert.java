@@ -4,6 +4,8 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.support.ui.Select;
 import org.testng.annotations.Test;
 
+import connect_BasePackage.BaseInit;
+
 public class SendDelAlert extends BaseInit {
     @Test
 	public static void delAlert() throws Exception

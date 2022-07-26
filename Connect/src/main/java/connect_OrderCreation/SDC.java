@@ -33,7 +33,7 @@ public class SDC extends ServiceDetail {
 
 		String pck = driver.findElement(By.xpath("//*[@id='lblPickup']/span/b")).getText();
 		System.out.println("Service SDC :: Pickup # " + pck);
-		logger.info("Service SDC :: Pickup # " + pck + "\n");
+		logs.info("Service SDC :: Pickup # " + pck + "\n");
 		Thread.sleep(1000);
 
 		ExcelDataProvider excelDataProvider = new ExcelDataProvider();

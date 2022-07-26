@@ -2,16 +2,27 @@ package connect_BasePackage;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
-import java.util.concurrent.TimeUnit;
+import java.util.ResourceBundle;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
+import org.apache.poi.EncryptedDocumentException;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.DataFormatter;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.JavascriptExecutor;
@@ -22,224 +33,95 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.ITestResult;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.AfterSuite;
-import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeSuite;
-import org.testng.annotations.BeforeTest;
 
 import com.relevantcodes.extentreports.ExtentReports;
 import com.relevantcodes.extentreports.ExtentTest;
 import com.relevantcodes.extentreports.LogStatus;
 
+import connect_OCBaseMethods.ServiceDetail;
 import io.github.bonigarcia.wdm.WebDriverManager;
 
 public class BaseInit {
 
-	public static Properties storage = null;
-	public static WebDriver driver;
-	public static Logger logs;
-	public static ExtentTest test;
-	public static ExtentReports report;
+	public static ResourceBundle rb = ResourceBundle.getBundle("config");
 	public static StringBuilder msg = new StringBuilder();
+	public static WebDriver driver;
+	public static Properties storage = new Properties();
+	String baseUrl = rb.getString("URL");
+
+	public static Logger logs;
+	public static ExtentReports report;
+	public static ExtentTest test;
 
 	@BeforeSuite
-	public void startUp() throws Exception {
-		startTest();
+	public void beforeMethod() throws Exception {
 		if (driver == null) {
-			// Initialize Logs
-			logs = Logger.getLogger("devpinoyLogger");
-			logs.info("initialization of the log is done");
-
-			// Initialization and Load Properties File
-			logs.info("initialization of the properties file");
-
+			String logFilename = this.getClass().getSimpleName();
+			logs = Logger.getLogger(logFilename);
+			startTest();
 			storage = new Properties();
-			FileInputStream fi = new FileInputStream(
-					".\\src\\main\\resources\\samyak_PropertiesData\\ObjectStorage.properties");
+			FileInputStream fi = new FileInputStream(".\\src\\main\\resources\\config.properties");
 			storage.load(fi);
 			logs.info("initialization of the properties file is done");
 
-			// Launch the browser
-			logs.info("Launching the browser");
-			String browserkey = storage.getProperty("browser");
-			if (browserkey.equalsIgnoreCase("firefox")) {
-				/*
-				 * System.setProperty("webdriver.gecko.driver",
-				 * ".\\src\\main\\resources\\geckodriver.exe"); driver = new FirefoxDriver();
-				 */
-				WebDriverManager.firefoxdriver().setup();
-				driver = new FirefoxDriver();
-				logs.info("Firefox Browser is launched");
+			// --Opening Chrome Browser
+			DesiredCapabilities capabilities = new DesiredCapabilities();
+			WebDriverManager.chromedriver().setup();
+			ChromeOptions options = new ChromeOptions();
 
-			}
-			if (browserkey.equalsIgnoreCase("firefox Headless")) {
-				/*
-				 * System.setProperty("webdriver.gecko.driver",
-				 * ".\\src\\main\\resources\\geckodriver.exe"); driver = new FirefoxDriver();
-				 */
-				FirefoxOptions options = new FirefoxOptions();
-				options.setHeadless(true);
+			// options.addArguments("headless");
+			options.addArguments("--incognito");
+			options.addArguments("--test-type");
+			options.addArguments("--no-proxy-server");
+			options.addArguments("--proxy-bypass-list=*");
+			options.addArguments("--disable-extensions");
+			options.addArguments("--no-sandbox");
+			options.addArguments("window-size=1036,776");
+			// options.addArguments("--start-maximized");
+			String downloadFilepath = System.getProperty("user.dir") + "\\src\\main\\resources";
+			HashMap<String, Object> chromePrefs = new HashMap<String, Object>();
+			chromePrefs.put("profile.default_content_settings.popups", 0);
+			chromePrefs.put("download.prompt_for_download", "false");
+			chromePrefs.put("safebrowsing.enabled", "false");
+			chromePrefs.put("download.default_directory", downloadFilepath);
+			options.setExperimentalOption("prefs", chromePrefs);
+			capabilities.setCapability(CapabilityType.ACCEPT_SSL_CERTS, true);
+			capabilities.setCapability(ChromeOptions.CAPABILITY, options);
+			capabilities.setPlatform(Platform.ANY);
 
-				// pass the options parameter in the Firefox driver declaration
-				driver = new FirefoxDriver(options);
-				logs.info("Firefox Browser is launched");
+			// options.addArguments("--headless");
+			// options.addArguments("window-size=1936,1056");
 
-			}
-			if (browserkey.equalsIgnoreCase("chrome headless")) {
-				/*
-				 * System.setProperty("webdriver.gecko.driver",
-				 * ".\\src\\main\\resources\\geckodriver.exe"); driver = new FirefoxDriver();
-				 */
-				DesiredCapabilities capabilities = new DesiredCapabilities();
-				WebDriverManager.chromedriver().setup();
-				ChromeOptions options = new ChromeOptions();
-				// options.addArguments("headless");
-				// options.addArguments("headless");
-				options.addArguments("--incognito");
-				options.addArguments("--test-type");
-				options.addArguments("--no-proxy-server");
-				options.addArguments("--proxy-bypass-list=*");
-				options.addArguments("--disable-extensions");
-				options.addArguments("--no-sandbox");
-				// options.addArguments("--headless");
-				options.addArguments("--start-maximized");
+			driver = new ChromeDriver(options);
 
-				// options.addArguments("window-size=1366x788");
-				capabilities.setPlatform(Platform.ANY);
-				capabilities.setCapability(ChromeOptions.CAPABILITY, options);
-				driver = new ChromeDriver(options);
-				// Default size
-				Dimension currentDimension = driver.manage().window().getSize();
-				int height = currentDimension.getHeight();
-				int width = currentDimension.getWidth();
-				System.out.println("Current height: " + height);
-				System.out.println("Current width: " + width);
-				System.out.println("window size==" + driver.manage().window().getSize());
+			// Default size
+			Dimension currentDimension = driver.manage().window().getSize();
+			int height = currentDimension.getHeight();
+			int width = currentDimension.getWidth();
+			System.out.println("Current height: " + height);
+			System.out.println("Current width: " + width);
+			System.out.println("window size==" + driver.manage().window().getSize());
 
-			} else if (browserkey.equalsIgnoreCase("chrome")) {
-				/*
-				 * ChromeOptions chromeOptions = new ChromeOptions(); chromeOptions.
-				 * setBinary("C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe");
-				 * System.setProperty("webdriver.chrome.driver",
-				 * ".\\src\\main\\resources\\chromedriver.exe"); driver = new
-				 * ChromeDriver(chromeOptions);
-				 */
-				WebDriverManager.chromedriver().setup();
-				ChromeOptions options1 = new ChromeOptions();
-				options1.addArguments("--incognito");
-				options1.addArguments("--test-type");
-				options1.addArguments("--disable-extensions");
-				options1.addArguments("--start-maximized");
-				driver = new ChromeDriver(options1);
-				logs.info("Chrome Browser is launched");
-				System.out.println("Chrome Browser is launched");
-			} else {
-				System.out.println("Browser is not defined");
-				logs.info("Browser is not defined");
-				System.out.println("Browser is not defined");
-			}
-			// Maximize the browser
 			/*
-			 * driver.manage().window().maximize(); // logs.info("windows is maximized");
-			 * 
-			 * System.out.println(driver.manage().window().getSize());
-			 * logs.info(driver.manage().window().getSize()); // Create object of Dimensions
-			 * class
-			 * 
-			 * Dimension d = new Dimension(1366,728); // Resize the current window to the
-			 * given dimension driver.manage().window().setSize(d);
-			 * System.out.println("Resize the browser window");
-			 * logs.info("Resize the browser window");
+			 * Dimension newDimension = new Dimension(1038, 776);
+			 * driver.manage().window().setSize(newDimension);
 			 */
-			// define timeout
-			driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-			logs.info("timeout is defined");
 
-			// delete the cookies
-			driver.manage().deleteAllCookies();
-			logs.info("Cookies are deleted");
+			// driver.manage().window().maximize();
+			login();
 
-			// Object of the ExcelFileReader Class
-			/*
-			 * data = new ExcelFileReader();
-			 * logs.info("initialization of the excelfilereader Class is done");
-			 */
 		}
 
-	}
-
-	@BeforeTest
-	public void login() throws InterruptedException {
-		driver.get(storage.getProperty("url"));
-		waitForPageLoad();
-		WebDriverWait wait = new WebDriverWait(driver, 50);
-		wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.className("login")));
-		highLight(isElementPresent("UserName_id"), driver);
-		isElementPresent("UserName_id").sendKeys(storage.getProperty("UserName"));
-		logs.info("Entered UserName");
-		highLight(isElementPresent("Pwd_id"), driver);
-		isElementPresent("Pwd_id").sendKeys(storage.getProperty("Password"));
-		logs.info("Entered Password");
-		highLight(isElementPresent("LoginBtn_id"), driver);
-		isElementPresent("LoginBtn_id").click();
-		logs.info("Login done");
-		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[contains(text(),'Logging In...')]")));
-		wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("loaderDiv")));
-		waitForPageLoad();
-
-		// --Welcome Content
-
-	}
-
-	@AfterTest
-	public void logOut() throws InterruptedException {
-		WebDriverWait wait = new WebDriverWait(driver, 50);
-		Actions act = new Actions(driver);
-		JavascriptExecutor js = (JavascriptExecutor) driver;
-
-		WebElement LogOut = isElementPresent("LogOut_linkText");
-		act.moveToElement(LogOut).build().perform();
-		wait.until(ExpectedConditions.elementToBeClickable(LogOut));
-		highLight(LogOut, driver);
-		js.executeScript("arguments[0].click();", LogOut);
-		wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("loaderDiv")));
-		wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.className("login")));
-		logs.info("Logout done");
-
-	}
-
-	@AfterSuite
-	public void closeBrowser() throws InterruptedException {
-		// try {
-		driver.close();
-
-		System.out.println("Browser closed");
-		logs.info("Browser closed");
-
-		report.flush();
-
-		// catch won't be executed
-		/*
-		 * catch (NullPointerException e) { System.out.println(e); }
-		 */
-		// executed regardless of exception occurred or not
-		/*
-		 * finally { driver.close();
-		 * 
-		 * System.out.println("Browser closed"); logs.info("Browser closed");
-		 * 
-		 * report.flush(); }
-		 */
 	}
 
 	@BeforeMethod
@@ -251,7 +133,15 @@ public class BaseInit {
 	}
 
 	public static void startTest() {
-		report = new ExtentReports("./ExtentReport/ExtentReportResults.html", true);
+		// You could find the xml file below. Create xml file in your project and copy
+		// past the code mentioned below
+
+		System.setProperty("extent.reporter.pdf.start", "true");
+		System.setProperty("extent.reporter.pdf.out", "./Report/PDFExtentReport/ExtentPDF.pdf");
+
+		// report.loadConfig(new File(System.getProperty("user.dir")
+		// +"\\extent-config.xml"));
+		report = new ExtentReports("./Report/ExtentReport/ExtentReportResults.html", true);
 		// test = report.startTest();
 	}
 
@@ -260,53 +150,32 @@ public class BaseInit {
 		report.flush();
 	}
 
-	public static String getFailScreenshot(WebDriver driver, String screenshotName) throws Exception {
-		String dateName = new SimpleDateFormat("yyyyMMddhhmmss").format(new Date());
+	public static String getScreenshot(WebDriver driver, String screenshotName) throws IOException {
+
 		TakesScreenshot ts = (TakesScreenshot) driver;
 		File source = ts.getScreenshotAs(OutputType.FILE);
 		// after execution, you could see a folder "FailedTestsScreenshots" under src
 		// folder
-		String destination = System.getProperty("user.dir") + "/FailedTestsScreenshots/" + screenshotName + dateName
+		String destination = System.getProperty("user.dir") + "/Report/Connect_Screenshot/" + screenshotName + ".png";
+		File finalDestination = new File(destination);
+		FileUtils.copyFile(source, finalDestination);
+		return destination;
+	}
+
+	public static String getFailScreenshot(WebDriver driver, String screenshotName) throws Exception {
+		// String dateName = new SimpleDateFormat("yyyyMMddhhmmss").format(new Date());
+		TakesScreenshot ts = (TakesScreenshot) driver;
+		File source = ts.getScreenshotAs(OutputType.FILE);
+		// after execution, you could see a folder "FailedTestsScreenshots" under src
+		// folder
+		String destination = System.getProperty("user.dir") + "/Report/FailedTestsScreenshots/" + screenshotName
 				+ ".png";
 		File finalDestination = new File(destination);
 		FileUtils.copyFile(source, finalDestination);
 		return destination;
 	}
 
-	@AfterMethod
-	public void getResult(ITestResult result) throws Exception {
-
-		if (result.getStatus() == ITestResult.FAILURE) {
-			test.log(LogStatus.FAIL, "Test Case Failed is " + result.getName());
-			// test.log(LogStatus.FAIL, "Test Case Failed is " +
-			// result.getThrowable().getMessage());
-			test.log(LogStatus.FAIL, "Test Case Failed is " + result.getThrowable());
-			// To capture screenshot path and store the path of the screenshot in the string
-			// "screenshotPath"
-			// We do pass the path captured by this mehtod in to the extent reports using
-			// "logger.addScreenCapture" method.
-			String screenshotPath = BaseInit.getFailScreenshot(driver, result.getName());
-			// To add it in the extent report
-			test.log(LogStatus.FAIL, test.addScreenCapture(screenshotPath));
-		} else if (result.getStatus() == ITestResult.SUCCESS) {
-			test.log(LogStatus.PASS, "Test Case Pass is " + result.getName());
-
-		} else if (result.getStatus() == ITestResult.SKIP) {
-			test.log(LogStatus.SKIP, "Test Case Skipped is " + result.getName());
-		}
-	}
-
-	public void waitForPageLoad() {
-
-		WebDriverWait wait = new WebDriverWait(driver, 30);
-		wait.until(new ExpectedCondition<Boolean>() {
-			public Boolean apply(WebDriver driver) {
-				return ((JavascriptExecutor) driver).executeScript("return document.readyState").equals("complete");
-			}
-		});
-	}
-
-	public WebElement isElementPresent(String propkey) {
+	public static WebElement isElementPresent(String propkey) {
 
 		try {
 
@@ -330,13 +199,11 @@ public class BaseInit {
 
 				return driver.findElement(By.className(storage.getProperty(propkey)));
 
-			}
-			if (propkey.contains("cssSelector")) {
+			} else if (propkey.contains("cssSelector")) {
 
 				return driver.findElement(By.cssSelector(storage.getProperty(propkey)));
-			}
 
-			else {
+			} else {
 
 				System.out.println("propkey is not defined");
 
@@ -368,203 +235,274 @@ public class BaseInit {
 
 	}
 
-	public void wait(String parameter) {
-		WebDriverWait wait = new WebDriverWait(driver, 5000);
-		wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath(parameter)));
+	@AfterMethod
+	public void getResult(ITestResult result) throws Exception {
+
+		if (result.getStatus() == ITestResult.FAILURE) {
+			test.log(LogStatus.FAIL, "Test Case Failed is " + result.getName());
+			// test.log(LogStatus.FAIL, "Test Case Failed is " +
+			// result.getThrowable().getMessage());
+			test.log(LogStatus.FAIL, "Test Case Failed is " + result.getThrowable());
+			// To capture screenshot path and store the path of the screenshot in the string
+			// "screenshotPath"
+			// We do pass the path captured by this mehtod in to the extent reports using
+			// "logs.addScreenCapture" method.
+			String screenshotPath = getFailScreenshot(driver, result.getName());
+			// To add it in the extent report
+			test.log(LogStatus.FAIL, test.addScreenCapture(screenshotPath));
+		} else if (result.getStatus() == ITestResult.SUCCESS) {
+			test.log(LogStatus.PASS, "Test Case Pass is " + result.getName());
+			String screenshotPath = getScreenshot(driver, result.getName());
+			// To add it in the extent report
+			test.log(LogStatus.PASS, test.addScreenCapture(screenshotPath));
+		} else if (result.getStatus() == ITestResult.SKIP) {
+			test.log(LogStatus.SKIP, "Test Case Skipped is " + result.getName());
+		}
 	}
 
-	public void action(WebElement parameter) {
+	public void login() throws Exception {
+		WebDriverWait wait = new WebDriverWait(driver, 50);
 		Actions act = new Actions(driver);
-		act.moveToElement(parameter).click().perform();
+		String Env = storage.getProperty("Env");
+
+		if (Env.equalsIgnoreCase("Pre-Prod")) {
+			String baseUrl = storage.getProperty("PREPRODURL");
+			driver.get(baseUrl);
+			Thread.sleep(2000);
+			try {
+				wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.className("login")));
+				String UserName = storage.getProperty("PREPRODUserName");
+				highLight(isElementPresent("UserName_id"), driver);
+				isElementPresent("UserName_id").sendKeys(UserName);
+				logs.info("Entered UserName");
+				String Password = storage.getProperty("PREPRODPassword");
+				highLight(isElementPresent("Password_id"), driver);
+				isElementPresent("Password_id").sendKeys(Password);
+				logs.info("Entered Password");
+
+			} catch (Exception e) {
+				msg.append("URL is not working==FAIL");
+				getScreenshot(driver, "LoginIssue");
+				driver.quit();
+				Env = storage.getProperty("Env");
+				String File = ".\\Report\\RTE_Screenshot\\LoginIssue.png";
+				Env = storage.getProperty("Env");
+				String subject = "Selenium Automation Script:" + Env + " RTE Smoke";
+
+				try {
+//					/kunjan.modi@samyak.com, pgandhi@samyak.com,parth.doshi@samyak.com
+					/*
+					 * SendEmail.
+					 * sendMail("ravina.prajapati@samyak.com, asharma@samyak.com, parth.doshi@samyak.com"
+					 * , subject, msg.toString(), File);
+					 */
+
+					Email.sendMail("ravina.prajapati@samyak.com", subject, msg.toString(), File);
+
+				} catch (Exception ex) {
+					logs.error(ex);
+				}
+
+			}
+
+		} else if (Env.equalsIgnoreCase("STG")) {
+			String baseUrl = storage.getProperty("STGURL");
+			driver.get(baseUrl);
+			Thread.sleep(2000);
+			try {
+				wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.className("login")));
+				String UserName = storage.getProperty("STGUserName");
+				highLight(isElementPresent("UserName_id"), driver);
+				isElementPresent("UserName_id").sendKeys(UserName);
+				logs.info("Entered UserName");
+				String Password = storage.getProperty("STGPassword");
+				highLight(isElementPresent("Password_id"), driver);
+				isElementPresent("Password_id").sendKeys(Password);
+				logs.info("Entered Password");
+			} catch (Exception e) {
+				msg.append("URL is not working==FAIL");
+				getScreenshot(driver, "LoginIssue");
+				driver.quit();
+				Env = storage.getProperty("Env");
+				String File = ".\\Report\\RTE_Screenshot\\LoginIssue.png";
+				Env = storage.getProperty("Env");
+				String subject = "Selenium Automation Script:" + Env + " RTE Smoke";
+
+				try {
+//					/kunjan.modi@samyak.com, pgandhi@samyak.com,parth.doshi@samyak.com
+					/*
+					 * SendEmail.
+					 * sendMail("ravina.prajapati@samyak.com, asharma@samyak.com, parth.doshi@samyak.com"
+					 * , subject, msg.toString(), File);
+					 */
+
+					Email.sendMail("ravina.prajapati@samyak.com", subject, msg.toString(), File);
+
+				} catch (Exception ex) {
+					logs.error(ex);
+				}
+
+			}
+
+		} else if (Env.equalsIgnoreCase("DEV")) {
+			String baseUrl = storage.getProperty("DEVURL");
+			driver.get(baseUrl);
+			Thread.sleep(2000);
+			try {
+				wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.className("login")));
+				String UserName = storage.getProperty("DEVUserName");
+				highLight(isElementPresent("UserName_id"), driver);
+				isElementPresent("UserName_id").sendKeys(UserName);
+				logs.info("Entered UserName");
+				String Password = storage.getProperty("DEVPassword");
+				highLight(isElementPresent("Password_id"), driver);
+				isElementPresent("Password_id").sendKeys(Password);
+				logs.info("Entered Password");
+			} catch (Exception e) {
+				msg.append("URL is not working==FAIL");
+				getScreenshot(driver, "LoginIssue");
+				driver.quit();
+				Env = storage.getProperty("Env");
+				String File = ".\\Report\\RTE_Screenshot\\LoginIssue.png";
+				Env = storage.getProperty("Env");
+				String subject = "Selenium Automation Script:" + Env + " RTE Smoke";
+
+				try {
+//					/kunjan.modi@samyak.com, pgandhi@samyak.com,parth.doshi@samyak.com
+					/*
+					 * SendEmail.
+					 * sendMail("ravina.prajapati@samyak.com, asharma@samyak.com, parth.doshi@samyak.com"
+					 * , subject, msg.toString(), File);
+					 */
+
+					Email.sendMail("ravina.prajapati@samyak.com", subject, msg.toString(), File);
+
+				} catch (Exception ex) {
+					logs.error(ex);
+				}
+
+			}
+		}
+		highLight(isElementPresent("Login_id"), driver);
+		isElementPresent("Login_id").click();
+		logs.info("Login done");
+		getScreenshot(driver, "ConnectLogin");
+		wait.until(
+				ExpectedConditions.invisibilityOfElementLocated(By.xpath("//span[contains(text(),'Logging In...')]")));
+		wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("loaderDiv")));
+		wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.className("welcomecontent")));
+
+		// --Go to Operation
+		WebElement operation = isElementPresent("OperMenu_id");
+		wait.until(ExpectedConditions.visibilityOf(operation));
+		wait.until(ExpectedConditions.elementToBeClickable(operation));
+		act.moveToElement(operation).click().build().perform();
+		// --Go to TaskLog
+		WebElement TaskLog = isElementPresent("OpTaskLog_id");
+		wait.until(ExpectedConditions.visibilityOf(TaskLog));
+		wait.until(ExpectedConditions.elementToBeClickable(TaskLog));
+		act.moveToElement(TaskLog).click().build().perform();
+		wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("loaderDiv")));
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("txtContains")));
+
+		// Move to ServiceDetail Class
+		ServiceDetail.SvcDetail();
+
 	}
 
-	public void javaScrExec(WebElement parameter) {
-		JavascriptExecutor js = (JavascriptExecutor) driver;
-		js.executeScript("arguments[0].scrollIntoView();", parameter);
-	}
-
-	public void pageSize(String FName) throws InterruptedException, IOException {
-		// Page size click events
-		JavascriptExecutor js = (JavascriptExecutor) driver;
+	public void logOut() throws InterruptedException, IOException {
+		WebDriverWait wait = new WebDriverWait(driver, 50);
 		Actions act = new Actions(driver);
+		JavascriptExecutor js = (JavascriptExecutor) driver;
 
-		System.out.println("--------------Testing PageSize---------------");
-
-		// Airport grid data count
-		WebElement ApdivID = isElementPresent("APgridcontainer_id");
-		List<WebElement> ApDataCount = ApdivID
-				.findElements(By.xpath("//*[@id=\"gridContainer\"]/div/div[6]/div/table/tbody/tr[@aria-rowindex]"));
-
-		ApDataCount.size();
-		System.out.println("no.of rows are==" + ApDataCount.size());
-		int Rcount = ApDataCount.size();
-		System.out.println("row count is==" + Rcount);
-		logs.info("row count is==" + Rcount);
-
-		if (Rcount == 10) {
-			System.out.println("row count is selected as 10");
-			logs.info("row count is selected as 10");
-		} else if (Rcount == 20) {
-			System.out.println("row count is selected as 20");
-			logs.info("row count is selected as 20");
-		} else if (Rcount == 30) {
-			System.out.println("row count is selected as 30");
-			logs.info("row count is selected as 30");
-		} else if (Rcount == 40) {
-			System.out.println("row count is selected as 40");
-			logs.info("row count is selected as 40");
-		} else if (Rcount == 50) {
-			System.out.println("row count is selected as 50");
-			logs.info("row count is selected as 50");
-		} else {
-			System.out.println("there is no data");
-			logs.info("there is no data");
-
-		}
-		WebElement pagerdiv = isElementPresent("pagerDiv_xpath");
-		try {
-			WebElement pagesize10 = isElementPresent("APPagesize10_xpath");
-			System.out.println("page size for pagesize10 is==" + pagesize10.getText());
-			logs.info("page size for pagesize10 is==" + pagesize10.getText());
-			js.executeScript("arguments[0].scrollIntoView();", pagerdiv);
-			System.out.println("scroll down");
-			highLight(pagesize10, driver);
-			act.moveToElement(pagesize10).click().perform();
-			System.out.println("clicked on pagesize 10");
-			logs.info("clicked on pagesize 10");
-			Thread.sleep(2000);
-		} catch (Exception e) {
-			System.out.println("PageSize 10 is not exist");
-			logs.info("PageSize 10 is not exist");
-		}
-		try {
-			WebElement pagesize20 = isElementPresent("APPagesize20_xpath");
-			System.out.println("page size for pagesize20 is==" + pagesize20.getText());
-			logs.info("page size for pagesize20 is==" + pagesize20.getText());
-			js.executeScript("arguments[0].scrollIntoView();", pagerdiv);
-			System.out.println("scroll down");
-			getScreenshot("PageSize10_", FName, driver);
-			highLight(pagesize20, driver);
-			act.moveToElement(pagesize20).click().perform();
-			System.out.println("clicked on pagesize 20");
-			logs.info("clicked on pagesize 20");
-			Thread.sleep(2000);
-		} catch (Exception e) {
-			System.out.println("PageSize 20 is not exist");
-			logs.info("PageSize 20 is not exist");
-		}
-		try {
-			WebElement pagesize30 = isElementPresent("APPagesize30_xpath");
-			System.out.println("page size for pagesize30 is==" + pagesize30.getText());
-			logs.info("page size for pagesize30 is==" + pagesize30.getText());
-			js.executeScript("arguments[0].scrollIntoView();", pagerdiv);
-			System.out.println("scroll down");
-			getScreenshot("PageSize20_", FName, driver);
-			highLight(pagesize30, driver);
-			act.moveToElement(pagesize30).click().perform();
-			System.out.println("clicked on pagesize 30");
-			logs.info("clicked on pagesize 30");
-			Thread.sleep(2000);
-		} catch (Exception e) {
-			System.out.println("PageSize 30 is not exist");
-			logs.info("PageSize 30 is not exist");
-		}
-		try {
-			WebElement pagesize40 = isElementPresent("APPagesize40_xpath");
-			System.out.println("page size for pagesize40 is==" + pagesize40.getText());
-			logs.info("page size for pagesize40 is==" + pagesize40.getText());
-			js.executeScript("arguments[0].scrollIntoView();", pagerdiv);
-			System.out.println("scroll down");
-			getScreenshot("PageSize30_", FName, driver);
-			WebElement pagesize40n = isElementPresent("APPagesize40_xpath");
-			highLight(pagesize40n, driver);
-			act.moveToElement(pagesize40n).click().perform();
-			System.out.println("clicked on pagesize 40");
-			logs.info("clicked on pagesize 40");
-			Thread.sleep(2000);
-		} catch (Exception e) {
-			System.out.println("PageSize 40 is not exist");
-			logs.info("PageSize 40 is not exist");
-		}
-		try {
-			WebElement pagesize50 = isElementPresent("APPagesize50_xpath");
-			System.out.println("page size for pagesize50 is==" + pagesize50.getText());
-			logs.info("page size for pagesize50 is==" + pagesize50.getText());
-			js.executeScript("arguments[0].scrollIntoView();", pagerdiv);
-			System.out.println("scroll down");
-			getScreenshot("PageSize40_", FName, driver);
-			WebElement pagesize50n = isElementPresent("APPagesize50_xpath");
-			highLight(pagesize50n, driver);
-			act.moveToElement(pagesize50n).click().perform();
-			System.out.println("clicked on pagesize 50");
-			logs.info("clicked on pagesize 50");
-			Thread.sleep(2000);
-			js.executeScript("arguments[0].scrollIntoView();", pagerdiv);
-			Thread.sleep(1000);
-			getScreenshot("PageSize50_", FName, driver);
-		} catch (Exception e) {
-			System.out.println("PageSize 50 is not exist");
-			logs.info("PageSize 50 is not exist");
-		}
+		WebElement LogOut = isElementPresent("LogOut_linkText");
+		act.moveToElement(LogOut).build().perform();
+		wait.until(ExpectedConditions.elementToBeClickable(LogOut));
+		highLight(LogOut, driver);
+		js.executeScript("arguments[0].click();", LogOut);
+		wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("loaderDiv")));
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@ng-bind=\"LogoutMessage\"]")));
+		String LogOutMsg = isElementPresent("LogOutMsg_xpath").getText();
+		logs.info("Logout Message is displayed==" + LogOutMsg);
+		logs.info("Logout done");
+		getScreenshot(driver, "ConnectLogOut");
 
 	}
 
-	public void pagination(String FName) throws InterruptedException, IOException {
-		JavascriptExecutor js = (JavascriptExecutor) driver;
-		Actions act = new Actions(driver);
-		// Pagination
-		System.out.println("-----Testing Pagination--------");
-		logs.info("------Testing Pagination-----");
+	public void Complete() throws Exception {
+		driver.close();
+		driver.quit();
 
-		List<WebElement> pagination = driver.findElements(
-				By.xpath("//*[@id=\"gridContainer\"]/div/div[11]/div[2]/div[contains(@aria-label,'Page')]"));
+	}
+
+	public String CuDate() {
+		DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy ");
+		Date date = new Date();
+		String date1 = dateFormat.format(date);
+		System.out.println("Current Date :- " + date1);
+		return date1;
+	}
+
+	public static String getDate(Calendar cal) {
+		return "" + cal.get(Calendar.MONTH) + "/" + (cal.get(Calendar.DATE) + 1) + "/" + cal.get(Calendar.YEAR);
+	}
+
+	public static Date addDays(Date d, int days) {
+		d.setTime(d.getTime() + days * 1000 * 60 * 60 * 24);
+		return d;
+	}
+
+	public void scrollToElement(WebElement element, WebDriver driver) {
+		JavascriptExecutor jse = (JavascriptExecutor) driver;
+		jse.executeScript("arguments[0].scrollIntoView(true);", element);
+	}
+
+	public void pagination() {
+		Actions act = new Actions(driver);
+		WebDriverWait wait = new WebDriverWait(driver, 50);
+		JavascriptExecutor js = (JavascriptExecutor) driver;
+
+		// Check paging
+		List<WebElement> pagination = driver
+				.findElements(By.xpath("//*[@class=\"dx-pages\"]//div[contains(@aria-label,'Page')]"));
 		System.out.println("size of pagination is==" + pagination.size());
-		logs.info("size of pagination is==" + pagination.size());
 
 		if (pagination.size() > 0) {
-			WebElement pageinfo = isElementPresent("ApgridpageInfo_xpath");
+			WebElement pageinfo = driver.findElement(By.xpath("//*[@class=\"dx-info\"]"));
 			System.out.println("page info is==" + pageinfo.getText());
-			WebElement pagerdiv = isElementPresent("pagerDiv_xpath");
-			WebElement secndpage = isElementPresent("Page2_xpath");
-			WebElement prevpage = isElementPresent("PrevPage_xpath");
-			WebElement nextpage = isElementPresent("NextPage_xpath");
-
+			WebElement pagerdiv = driver.findElement(By.className("dx-pages"));
+			WebElement secndpage = driver.findElement(By.xpath("//*[@aria-label=\"Page 2\"]"));
+			WebElement prevpage = driver.findElement(By.xpath("//*[@aria-label=\"Previous page\"]"));
+			WebElement nextpage = driver.findElement(By.xpath("//*[@aria-label=\" Next page\"]"));
+			WebElement firstpage = driver.findElement(By.xpath("//*[@aria-label=\"Page 1\"]"));
 			// Scroll
 			js.executeScript("arguments[0].scrollIntoView();", pagerdiv);
 
 			if (pagination.size() > 1) {
 				// click on page 2
-				js.executeScript("arguments[0].scrollIntoView();", pagerdiv);
-				secndpage = isElementPresent("Page2_xpath");
-				highLight(secndpage, driver);
+				secndpage = driver.findElement(By.xpath("//*[@aria-label=\"Page 2\"]"));
 				act.moveToElement(secndpage).click().perform();
 				System.out.println("Clicked on page 2");
-				logs.info("Clicked on page 2");
-				Thread.sleep(2000);
+				wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//*[@class=\"ajax-loadernew\"]")));
 
 				// click on previous button
-				prevpage = isElementPresent("PrevPage_xpath");
-				js.executeScript("arguments[0].scrollIntoView();", pagerdiv);
-				getScreenshot("Page2_", FName, driver);
-				prevpage = isElementPresent("PrevPage_xpath");
-				highLight(prevpage, driver);
+				prevpage = driver.findElement(By.xpath("//*[@aria-label=\"Previous page\"]"));
+				prevpage = driver.findElement(By.xpath("//*[@aria-label=\"Previous page\"]"));
 				act.moveToElement(prevpage).click().perform();
 				System.out.println("clicked on previous page");
-				logs.info("Clicked on Previous page");
-				Thread.sleep(2000);
+				wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//*[@class=\"ajax-loadernew\"]")));
 
 				// click on next button
-				nextpage = isElementPresent("NextPage_xpath");
-				js.executeScript("arguments[0].scrollIntoView();", pagerdiv);
-				getScreenshot("Page1(Previous)_", FName, driver);
-				nextpage = isElementPresent("NextPage_xpath");
-				highLight(nextpage, driver);
+				nextpage = driver.findElement(By.xpath("//*[@aria-label=\" Next page\"]"));
+				nextpage = driver.findElement(By.xpath("//*[@aria-label=\" Next page\"]"));
 				act.moveToElement(nextpage).click().perform();
 				System.out.println("clicked on next page");
-				logs.info("Clicked on Nextpage");
-				Thread.sleep(2000);
-				js.executeScript("arguments[0].scrollIntoView();", pagerdiv);
-				getScreenshot("Page2(Next)_", FName, driver);
+				wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//*[@class=\"ajax-loadernew\"]")));
+
+				firstpage = driver.findElement(By.xpath("//*[@aria-label=\"Page 1\"]"));
+				act.moveToElement(firstpage).click().perform();
+				System.out.println("Clicked on page 1");
+				wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//*[@class=\"ajax-loadernew\"]")));
 
 			} else {
 				System.out.println("Only 1 page is exist");
@@ -575,187 +513,174 @@ public class BaseInit {
 		}
 	}
 
-	public void normalView(String FName) throws InterruptedException, IOException {
-		System.out.println("-----Testing Normal View-------");
-		logs.info("------Testing Normal View-------");
-		Actions act = new Actions(driver);
-		JavascriptExecutor js = (JavascriptExecutor) driver;
-		WebDriverWait wait = new WebDriverWait(driver, 5000);
-		// click on normal view
-		WebElement Normal = isElementPresent("VCorNormal_xpath");
-		js.executeScript("window.scrollTo(0, -document.body.scrollHeight);");
-		highLight(Normal, driver);
-		act.moveToElement(Normal).click().perform();
+	public static String getData(String sheetName, int row, int col)
+			throws EncryptedDocumentException, InvalidFormatException, IOException {
 
-		System.out.println("clicked on Normal view");
-		logs.info("clicked on Normal view");
-		Thread.sleep(2000);
-		getScreenshot("ViewDropdown_", FName, driver);
-
-		wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@class=\"dx-scrollview-content\"]")));
-		// wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.xpath("//*[@class=\"dx-scrollview-content\"]")));
-
-		WebElement listdiv = isElementPresent("NormalView_xpath");
-		System.out.println("Items in list are==" + listdiv);
-		List<WebElement> viewlist = listdiv.findElements(By.tagName("div"));
-		System.out.println("size of Views list are==" + viewlist.size());
-
-		for (int count = 0; count < viewlist.size(); count++) {
-			String viewname = viewlist.get(count).getText();
-			System.out.println("Name of the view is==" + viewname);
-
-			if (viewname.equalsIgnoreCase("Compact")) {
-				highLight(viewlist.get(count), driver);
-				viewlist.get(count).click();
-				System.out.println("clicked on=" + viewlist.get(count).getText() + "view");
-				logs.info("clicked on=" + viewlist.get(count).getText() + "view");
-				Thread.sleep(2000);
-				getScreenshot("CompactView_", FName, driver);
-
-				Normal = isElementPresent("VCorNormal_xpath");
-				highLight(Normal, driver);
-				Normal.click();
-				System.out.println("clicked on Normal view");
-				logs.info("clicked on Normal view");
-			} else if (viewname.equalsIgnoreCase("Normal")) {
-				highLight(viewlist.get(count), driver);
-				viewlist.get(count).click();
-				System.out.println("clicked on=" + viewlist.get(count).getText() + "view");
-				Thread.sleep(2000);
-				getScreenshot("NormalView_", FName, driver);
-
-				Normal = isElementPresent("VCorNormal_xpath");
-				highLight(Normal, driver);
-				Normal.click();
-				System.out.println("clicked on Normal view");
-				logs.info("clicked on Normal view");
-
-			} else if (viewname.equalsIgnoreCase("Tall")) {
-				highLight(viewlist.get(count), driver);
-				viewlist.get(count).click();
-				System.out.println("clicked on=" + viewlist.get(count).getText() + "view");
-				logs.info("clicked on=" + viewlist.get(count).getText() + "view");
-				Thread.sleep(2000);
-				getScreenshot("TallView_", FName, driver);
-
-			} else {
-				System.out.println("views are not available");
-				logs.info("views are not available");
-			}
-
+		String Env = storage.getProperty("Env");
+		String FilePath = null;
+		if (Env.equalsIgnoreCase("Pre-Prod")) {
+			FilePath = storage.getProperty("PrePRODFile");
+		} else if (Env.equalsIgnoreCase("STG")) {
+			FilePath = storage.getProperty("STGFile");
+		} else if (Env.equalsIgnoreCase("DEV")) {
+			FilePath = storage.getProperty("DEVFile");
 		}
+
+		File src = new File(FilePath);
+
+		FileInputStream FIS = new FileInputStream(src);
+		Workbook workbook = WorkbookFactory.create(FIS);
+		Sheet sh1 = workbook.getSheet(sheetName);
+
+		DataFormatter formatter = new DataFormatter();
+		String Cell = formatter.formatCellValue(sh1.getRow(row).getCell(col));
+		FIS.close();
+		return Cell;
 	}
 
-	public void columns(String FName) throws IOException {
-		Actions act = new Actions(driver);
-		JavascriptExecutor js = (JavascriptExecutor) driver;
-		WebDriverWait wait = new WebDriverWait(driver, 5000);
-		System.out.println("-------Testing Columns-------");
-		logs.info("------Testing Columns------");
-		js.executeScript("window.scrollTo(0, -document.body.scrollHeight);");
-		WebElement col = isElementPresent("VCorCol_xpath");
-		highLight(col, driver);
-		act.moveToElement(col).click().perform();
-		System.out.println("clicked on columns");
-		getScreenshot("Columns", FName, driver);
-
-		wait.until(ExpectedConditions.elementToBeClickable(By.xpath("/html/body/div[3]")));
-
-		WebElement coltable = isElementPresent("ApColtableTR_xpath");
-		System.out.println("stored columns table");
-
-		List<WebElement> columns = coltable.findElements(By.tagName("td"));
-		System.out.println("stored all the td of columnns");
-		int ActualCol = columns.size();
-		System.out.println("Default columns value is==" + ActualCol);
-		logs.info("Default columns value is==" + ActualCol);
-
-		WebElement listdiv = isElementPresent("apcolmain_xpath");
-		System.out.println("Items in list are==" + listdiv);
-		List<WebElement> collist = listdiv.findElements(By.tagName("li"));
-		System.out.println("size of columns list are==" + collist.size());
-		logs.info("size of columns list are==" + collist.size());
-
-		for (int count = 0; count < collist.size() - 3; count++) {
-
-			String itemvalue = collist.get(count).getAttribute("aria-selected");
-			System.out.println("item is selected==" + itemvalue);
-			logs.info("item is selected==" + itemvalue);
-			WebElement It = collist.get(count);
-			highLight(It, driver);
-			act.moveToElement(It).click().perform();
-			System.out.println("Clicked on Col");
-			logs.info("Clicked on Col");
-			getScreenshot("RemovedColumn_", FName, driver);
-
-			coltable = isElementPresent("ApColtableTR_xpath");
-			columns = coltable.findElements(By.tagName("td"));
-
-			int ChangeCol = columns.size();
-			System.out.println("After removed column, columns value is==" + ChangeCol);
-			logs.info("After removed column, columns value is==" + ChangeCol);
-
-			if (ActualCol != ChangeCol) {
-				System.out.println("Pass=column is removed");
-				logs.info("Pass=column is removed");
-			} else {
-				System.out.println("Fail=column is not removed");
-				logs.info("Fail=column is not removed");
-			}
-
+	public static void setData(String sheetName, int row, int col, String value)
+			throws EncryptedDocumentException, InvalidFormatException, IOException {
+		String Env = storage.getProperty("Env");
+		String FilePath = null;
+		if (Env.equalsIgnoreCase("Pre-Prod")) {
+			FilePath = storage.getProperty("PrePRODFile");
+		} else if (Env.equalsIgnoreCase("STG")) {
+			FilePath = storage.getProperty("STGFile");
+		} else if (Env.equalsIgnoreCase("DEV")) {
+			FilePath = storage.getProperty("DEVFile");
 		}
+
+		File src = new File(FilePath);
+		FileInputStream fis = new FileInputStream(src);
+		Workbook workbook = WorkbookFactory.create(fis);
+		FileOutputStream fos1 = new FileOutputStream(src);
+		Sheet sh = workbook.getSheet(sheetName);
+
+		sh.getRow(row).createCell(col).setCellValue(value);
+		workbook.write(fos1);
+		fos1.close();
+		fis.close();
+	}
+
+	public static int getTotalRow(String sheetName)
+			throws EncryptedDocumentException, InvalidFormatException, IOException {
+		String Env = storage.getProperty("Env");
+		String FilePath = null;
+		if (Env.equalsIgnoreCase("Pre-Prod")) {
+			FilePath = storage.getProperty("PrePRODFile");
+		} else if (Env.equalsIgnoreCase("STG")) {
+			FilePath = storage.getProperty("STGFile");
+		} else if (Env.equalsIgnoreCase("DEV")) {
+			FilePath = storage.getProperty("DEVFile");
+		}
+
+		File src = new File(FilePath);
+
+		FileInputStream FIS = new FileInputStream(src);
+		Workbook workbook = WorkbookFactory.create(FIS);
+		Sheet sh1 = workbook.getSheet(sheetName);
+
+		int rowNum = sh1.getLastRowNum() + 1;
+		FIS.close();
+		return rowNum;
 
 	}
 
-	/*
-	 * public String getScreenshot(String screenshotName, String MName, WebDriver
-	 * driver) throws IOException {
-	 * 
-	 * String dateName = new SimpleDateFormat("yyyyMMddhhmmss").format(new Date());
-	 * TakesScreenshot ts = (TakesScreenshot) driver; File scrFile =
-	 * ts.getScreenshotAs(OutputType.FILE); String destination =
-	 * System.getProperty("user.dir") + "./src/main/resources/screenshots/" +
-	 * screenshotName + dateName + ".png"; if (MName.equals("Airport")) {
-	 * destination = System.getProperty("user.dir") +
-	 * "./src/main/resources/screenshots/Airport/" + screenshotName + dateName +
-	 * ".png"; File finalDestination = new File(destination);
-	 * FileUtils.copyFile(scrFile, finalDestination); return destination; } else if
-	 * (MName.equals("AirportGroup")) { destination = System.getProperty("user.dir")
-	 * + "./src/main/resources/screenshots/AirportGroup/" + screenshotName +
-	 * dateName + ".png"; File finalDestination = new File(destination);
-	 * FileUtils.copyFile(scrFile, finalDestination); return destination; } else {
-	 * System.out.println("Module name is not getting"); return destination; } }
-	 */
+	public static int getTotalCol(String sheetName)
+			throws EncryptedDocumentException, InvalidFormatException, IOException {
+		String Env = storage.getProperty("Env");
+		String FilePath = null;
+		if (Env.equalsIgnoreCase("Pre-Prod")) {
+			FilePath = storage.getProperty("PrePRODFile");
+		} else if (Env.equalsIgnoreCase("STG")) {
+			FilePath = storage.getProperty("STGFile");
+		} else if (Env.equalsIgnoreCase("DEV")) {
+			FilePath = storage.getProperty("DEVFile");
+		}
 
-	public void getScreenshot(String imagename, String MName, WebDriver driver) throws IOException {
+		File src = new File(FilePath);
+
+		FileInputStream FIS = new FileInputStream(src);
+		Workbook workbook = WorkbookFactory.create(FIS);
+		Sheet sh1 = workbook.getSheet(sheetName);
+
+		Row row = sh1.getRow(0);
+		int colNum = row.getLastCellNum();
+		FIS.close();
+		return colNum;
+
+	}
+
+	@AfterSuite
+	public void SendEmail() throws Exception {
+		logOut();
+		report.flush();
+		// --Close browser
+		Complete();
+		System.out.println("====Sending Email=====");
+		logs.info("====Sending Email=====");
+		// Send Details email
+
+		msg.append("*** This is automated generated email and send through automation script ***" + "\n");
+		msg.append("Process URL : " + baseUrl + "\n");
+		msg.append("Please find attached file of Report and Log");
+
+		String Env = storage.getProperty("Env");
+		String subject = "Selenium Automation Script:" + Env + " Connect Order Creation&Processing";
+		String File = ".\\Report\\ExtentReport\\ExtentReportResults.html,.\\Report\\log\\RTESmoke.html";
 
 		try {
+//			/kunjan.modi@samyak.com, pgandhi@samyak.com,parth.doshi@samyak.com
 
-			TakesScreenshot takesScreenshot = (TakesScreenshot) driver;
+			Email.sendMail("ravina.prajapati@samyak.com, asharma@samyak.com, parth.doshi@samyak.com", subject,
+					msg.toString(), File);
 
-			File scrFile = takesScreenshot.getScreenshotAs(OutputType.FILE);
+			// SendEmail.sendMail("ravina.prajapati@samyak.com", subject, msg.toString(),
+			// File);
 
-			String logFileName = new SimpleDateFormat("yyyyMMddHHmm").format(new Date());
+		} catch (Exception ex) {
+			logs.error(ex);
+		}
+	}
 
-			if (MName.equals("UserPreferences")) {
-				FileUtils.copyFile(scrFile, new File("./src/main/resources/screenshots/Airport/" + imagename
-						+ logFileName + System.currentTimeMillis() + ".png"));
+	public void isFileDownloaded(String fileName) {
+		String downloadPath = System.getProperty("user.dir") + "\\src\\main\\resources";
+		File dir = new File(downloadPath);
+		File[] dirContents = dir.listFiles();
 
-			} else if (MName.equals("TaskLogPreferences")) {
-				FileUtils.copyFile(scrFile, new File("./src/main/resources/screenshots/AirportGroup/" + imagename
-						+ logFileName + System.currentTimeMillis() + ".png"));
+		for (int i = 0; i < dirContents.length; i++) {
+			if (dirContents[i].getName().contains(fileName)) {
+				logs.info("File is exist with FileName==" + fileName);
+				// File has been found, it can now be deleted:
+				dirContents[i].delete();
+				logs.info(fileName + " File is Deleted");
 
+			} else {
+				logs.info("File is not exist with Filename==" + fileName);
 			}
-
-			System.out.println(
-					"Printing screen shot taken for className " + imagename + logFileName + System.currentTimeMillis());
-			logs.info(
-					"Printing screen shot taken for className " + imagename + logFileName + System.currentTimeMillis());
-
-		} catch (Exception e) {
-			System.out.println("Exception while taking screenshot " + e.getMessage());
-			logs.info("Exception while taking screenshot " + e.getMessage());
 		}
 
+	}
+
+	public static void waitUntilFileToDownload(String Name) throws InterruptedException {
+		String folderLocation = System.getProperty("user.dir") + "\\src\\main\\resources";
+		File directory = new File(folderLocation);
+		boolean downloadinFilePresence = false;
+		File[] filesList = null;
+		LOOP: while (true) {
+			filesList = directory.listFiles();
+			for (File file : filesList) {
+				downloadinFilePresence = file.getName().contains(Name);
+			}
+			if (downloadinFilePresence) {
+				for (; downloadinFilePresence;) {
+					Thread.sleep(5000);
+					continue LOOP;
+				}
+			} else {
+				logs.info("File is Downloaded successfully:Verified");
+				break;
+			}
+		}
 	}
 }

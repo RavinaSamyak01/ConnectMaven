@@ -53,7 +53,7 @@ public class PA extends ServiceDetail {
 
 		String pck = driver.findElement(By.xpath("//*[@id='lblPickup']/span/b")).getText();
 		System.out.println("Service PA :: Pickup # " + pck);
-		logger.info("Service PA :: Pickup # " + pck + "\n");
+		logs.info("Service PA :: Pickup # " + pck + "\n");
 		Thread.sleep(1000);
 		ExcelDataProvider excelDataProvider = new ExcelDataProvider();
 		excelDataProvider.writeData("Sheet1", 4, 32, pck);

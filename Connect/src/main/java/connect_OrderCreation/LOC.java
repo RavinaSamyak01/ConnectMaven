@@ -7,7 +7,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.Test;
 
-import connect_OCBaseMethods.BaseInit;
+import connect_BasePackage.BaseInit;
 import connect_OCBaseMethods.Deliver;
 import connect_OCBaseMethods.ExcelDataProvider;
 import connect_OCBaseMethods.Pickup;
@@ -35,7 +35,7 @@ public class LOC extends BaseInit {
 		String pck = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id='lblPickup']/span/b")))
 				.getText();
 		System.out.println("Service LOC :: Pickup # " + pck);
-		logger.info("Service LOC :: Pickup # " + pck + "\n");
+		logs.info("Service LOC :: Pickup # " + pck + "\n");
 		Thread.sleep(2000);
 		ExcelDataProvider excelDataProvider = new ExcelDataProvider();
 		excelDataProvider.writeData("Sheet1", 1, 32, pck);

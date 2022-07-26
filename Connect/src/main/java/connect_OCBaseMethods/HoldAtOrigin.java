@@ -5,6 +5,8 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 import org.testng.annotations.Test;
 
+import connect_BasePackage.BaseInit;
+
 public class HoldAtOrigin extends BaseInit {
 	
 	@Test
