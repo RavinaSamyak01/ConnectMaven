@@ -1,55 +1,119 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testng-results ignored="0" total="1" passed="1" failed="0" skipped="0">
+<testng-results ignored="0" total="1" passed="0" failed="0" skipped="1">
   <reporter-output>
   </reporter-output>
-  <suite started-at="2022-04-01T14:27:33 IST" name="ConnectSuite" finished-at="2022-04-01T14:28:36 IST" duration-ms="62640">
+  <suite started-at="2022-07-27T17:17:26 IST" name="Default suite" finished-at="2022-07-27T17:17:26 IST" duration-ms="99">
     <groups>
     </groups>
-    <test started-at="2022-04-01T14:27:33 IST" name="UserPreference" finished-at="2022-04-01T14:28:36 IST" duration-ms="62640">
-      <class name="samyak_Preferences.UserPreference">
-        <test-method is-config="true" signature="startUp()[pri:0, instance:samyak_Preferences.UserPreference@71a8adcf]" started-at="2022-04-01T14:27:31 IST" name="startUp" finished-at="2022-04-01T14:27:33 IST" duration-ms="2660" status="PASS">
+    <test started-at="2022-07-27T17:17:26 IST" name="Default test" finished-at="2022-07-27T17:17:26 IST" duration-ms="99">
+      <class name="connect_OCBaseMethods.ServiceDetail">
+        <test-method is-config="true" signature="beforeMethod()[pri:0, instance:connect_OCBaseMethods.ServiceDetail@29215f06]" started-at="2022-07-27T17:15:20 IST" name="beforeMethod" finished-at="2022-07-27T17:17:26 IST" duration-ms="126484" status="FAIL">
+          <exception class="org.openqa.selenium.TimeoutException">
+            <message>
+              <![CDATA[Expected condition failed: waiting for element to no longer be visible: By.xpath: //input[contains(@class,'ng-invalid ng-invalid-required')] (tried for 50 second(s) with 500 milliseconds interval)
+Build info: version: '3.141.59', revision: 'e82be7d358', time: '2018-11-14T08:17:03'
+System info: host: 'SIPL92', ip: '10.212.140.33', os.name: 'Windows 10', os.arch: 'amd64', os.version: '10.0', java.version: '16.0.2'
+Driver info: org.openqa.selenium.chrome.ChromeDriver
+Capabilities {acceptInsecureCerts: false, browserName: chrome, browserVersion: 103.0.5060.134, chrome: {chromedriverVersion: 103.0.5060.134 (8ec6fce403b..., userDataDir: C:\Users\RPRAJA~1\AppData\L...}, goog:chromeOptions: {debuggerAddress: localhost:51848}, javascriptEnabled: true, networkConnectionEnabled: false, pageLoadStrategy: normal, platform: WINDOWS, platformName: WINDOWS, proxy: Proxy(), setWindowRect: true, strictFileInteractability: false, timeouts: {implicit: 0, pageLoad: 300000, script: 30000}, unhandledPromptBehavior: dismiss and notify, webauthn:extension:credBlob: true, webauthn:extension:largeBlob: true, webauthn:virtualAuthenticators: true}
+Session ID: 2fbfb490f24e64aafc8a31ad390022b6]]>
+            </message>
+            <full-stacktrace>
+              <![CDATA[org.openqa.selenium.TimeoutException: Expected condition failed: waiting for element to no longer be visible: By.xpath: //input[contains(@class,'ng-invalid ng-invalid-required')] (tried for 50 second(s) with 500 milliseconds interval)
+Build info: version: '3.141.59', revision: 'e82be7d358', time: '2018-11-14T08:17:03'
+System info: host: 'SIPL92', ip: '10.212.140.33', os.name: 'Windows 10', os.arch: 'amd64', os.version: '10.0', java.version: '16.0.2'
+Driver info: org.openqa.selenium.chrome.ChromeDriver
+Capabilities {acceptInsecureCerts: false, browserName: chrome, browserVersion: 103.0.5060.134, chrome: {chromedriverVersion: 103.0.5060.134 (8ec6fce403b..., userDataDir: C:\Users\RPRAJA~1\AppData\L...}, goog:chromeOptions: {debuggerAddress: localhost:51848}, javascriptEnabled: true, networkConnectionEnabled: false, pageLoadStrategy: normal, platform: WINDOWS, platformName: WINDOWS, proxy: Proxy(), setWindowRect: true, strictFileInteractability: false, timeouts: {implicit: 0, pageLoad: 300000, script: 30000}, unhandledPromptBehavior: dismiss and notify, webauthn:extension:credBlob: true, webauthn:extension:largeBlob: true, webauthn:virtualAuthenticators: true}
+Session ID: 2fbfb490f24e64aafc8a31ad390022b6
+at org.openqa.selenium.support.ui.WebDriverWait.timeoutException(WebDriverWait.java:95)
+at org.openqa.selenium.support.ui.FluentWait.until(FluentWait.java:272)
+at connect_OCBaseMethods.ServiceDetail.SvcDetail(ServiceDetail.java:128)
+at connect_BasePackage.BaseInit.login(BaseInit.java:408)
+at connect_BasePackage.BaseInit.beforeMethod(BaseInit.java:118)
+at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:78)
+at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+at java.base/java.lang.reflect.Method.invoke(Method.java:567)
+at org.testng.internal.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:133)
+at org.testng.internal.MethodInvocationHelper.invokeMethodConsideringTimeout(MethodInvocationHelper.java:62)
+at org.testng.internal.ConfigInvoker.invokeConfigurationMethod(ConfigInvoker.java:385)
+at org.testng.internal.ConfigInvoker.invokeConfigurations(ConfigInvoker.java:321)
+at org.testng.SuiteRunner.privateRun(SuiteRunner.java:317)
+at org.testng.SuiteRunner.run(SuiteRunner.java:276)
+at org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:53)
+at org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:96)
+at org.testng.TestNG.runSuitesSequentially(TestNG.java:1212)
+at org.testng.TestNG.runSuitesLocally(TestNG.java:1134)
+at org.testng.TestNG.runSuites(TestNG.java:1063)
+at org.testng.TestNG.run(TestNG.java:1031)
+at org.testng.remote.AbstractRemoteTestNG.run(AbstractRemoteTestNG.java:115)
+at org.testng.remote.RemoteTestNG.initAndRun(RemoteTestNG.java:251)
+at org.testng.remote.RemoteTestNG.main(RemoteTestNG.java:77)
+]]>
+            </full-stacktrace>
+          </exception> <!-- org.openqa.selenium.TimeoutException -->
           <reporter-output>
           </reporter-output>
-        </test-method> <!-- startUp -->
-        <test-method is-config="true" signature="login()[pri:0, instance:samyak_Preferences.UserPreference@71a8adcf]" started-at="2022-04-01T14:27:33 IST" name="login" finished-at="2022-04-01T14:28:09 IST" duration-ms="35767" status="PASS">
-          <reporter-output>
-          </reporter-output>
-        </test-method> <!-- login -->
-        <test-method is-config="true" signature="testMethodName(java.lang.reflect.Method)[pri:0, instance:samyak_Preferences.UserPreference@71a8adcf]" started-at="2022-04-01T14:28:09 IST" name="testMethodName" finished-at="2022-04-01T14:28:09 IST" duration-ms="16" status="PASS">
-          <params>
-            <param index="0">
-              <value>
-                <![CDATA[public void samyak_Preferences.UserPreference.userPreference()]]>
-              </value>
-            </param>
-          </params>
+        </test-method> <!-- beforeMethod -->
+        <test-method is-config="true" signature="testMethodName(java.lang.reflect.Method)[pri:0, instance:connect_OCBaseMethods.ServiceDetail@29215f06]" started-at="2022-07-27T17:17:26 IST" name="testMethodName" finished-at="1970-01-01T05:30:00 IST" duration-ms="-1658922446699" status="SKIP">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- testMethodName -->
-        <test-method signature="userPreference()[pri:0, instance:samyak_Preferences.UserPreference@71a8adcf]" started-at="2022-04-01T14:28:09 IST" name="userPreference" finished-at="2022-04-01T14:28:21 IST" duration-ms="11417" status="PASS">
+        <test-method signature="SvcDetail()[pri:0, instance:connect_OCBaseMethods.ServiceDetail@29215f06]" started-at="2022-07-27T17:17:26 IST" name="SvcDetail" finished-at="2022-07-27T17:17:26 IST" duration-ms="0" status="SKIP">
+          <exception class="org.openqa.selenium.TimeoutException">
+            <message>
+              <![CDATA[Expected condition failed: waiting for element to no longer be visible: By.xpath: //input[contains(@class,'ng-invalid ng-invalid-required')] (tried for 50 second(s) with 500 milliseconds interval)
+Build info: version: '3.141.59', revision: 'e82be7d358', time: '2018-11-14T08:17:03'
+System info: host: 'SIPL92', ip: '10.212.140.33', os.name: 'Windows 10', os.arch: 'amd64', os.version: '10.0', java.version: '16.0.2'
+Driver info: org.openqa.selenium.chrome.ChromeDriver
+Capabilities {acceptInsecureCerts: false, browserName: chrome, browserVersion: 103.0.5060.134, chrome: {chromedriverVersion: 103.0.5060.134 (8ec6fce403b..., userDataDir: C:\Users\RPRAJA~1\AppData\L...}, goog:chromeOptions: {debuggerAddress: localhost:51848}, javascriptEnabled: true, networkConnectionEnabled: false, pageLoadStrategy: normal, platform: WINDOWS, platformName: WINDOWS, proxy: Proxy(), setWindowRect: true, strictFileInteractability: false, timeouts: {implicit: 0, pageLoad: 300000, script: 30000}, unhandledPromptBehavior: dismiss and notify, webauthn:extension:credBlob: true, webauthn:extension:largeBlob: true, webauthn:virtualAuthenticators: true}
+Session ID: 2fbfb490f24e64aafc8a31ad390022b6]]>
+            </message>
+            <full-stacktrace>
+              <![CDATA[org.openqa.selenium.TimeoutException: Expected condition failed: waiting for element to no longer be visible: By.xpath: //input[contains(@class,'ng-invalid ng-invalid-required')] (tried for 50 second(s) with 500 milliseconds interval)
+Build info: version: '3.141.59', revision: 'e82be7d358', time: '2018-11-14T08:17:03'
+System info: host: 'SIPL92', ip: '10.212.140.33', os.name: 'Windows 10', os.arch: 'amd64', os.version: '10.0', java.version: '16.0.2'
+Driver info: org.openqa.selenium.chrome.ChromeDriver
+Capabilities {acceptInsecureCerts: false, browserName: chrome, browserVersion: 103.0.5060.134, chrome: {chromedriverVersion: 103.0.5060.134 (8ec6fce403b..., userDataDir: C:\Users\RPRAJA~1\AppData\L...}, goog:chromeOptions: {debuggerAddress: localhost:51848}, javascriptEnabled: true, networkConnectionEnabled: false, pageLoadStrategy: normal, platform: WINDOWS, platformName: WINDOWS, proxy: Proxy(), setWindowRect: true, strictFileInteractability: false, timeouts: {implicit: 0, pageLoad: 300000, script: 30000}, unhandledPromptBehavior: dismiss and notify, webauthn:extension:credBlob: true, webauthn:extension:largeBlob: true, webauthn:virtualAuthenticators: true}
+Session ID: 2fbfb490f24e64aafc8a31ad390022b6
+at org.openqa.selenium.support.ui.WebDriverWait.timeoutException(WebDriverWait.java:95)
+at org.openqa.selenium.support.ui.FluentWait.until(FluentWait.java:272)
+at connect_OCBaseMethods.ServiceDetail.SvcDetail(ServiceDetail.java:128)
+at connect_BasePackage.BaseInit.login(BaseInit.java:408)
+at connect_BasePackage.BaseInit.beforeMethod(BaseInit.java:118)
+at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:78)
+at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+at java.base/java.lang.reflect.Method.invoke(Method.java:567)
+at org.testng.internal.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:133)
+at org.testng.internal.MethodInvocationHelper.invokeMethodConsideringTimeout(MethodInvocationHelper.java:62)
+at org.testng.internal.ConfigInvoker.invokeConfigurationMethod(ConfigInvoker.java:385)
+at org.testng.internal.ConfigInvoker.invokeConfigurations(ConfigInvoker.java:321)
+at org.testng.SuiteRunner.privateRun(SuiteRunner.java:317)
+at org.testng.SuiteRunner.run(SuiteRunner.java:276)
+at org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:53)
+at org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:96)
+at org.testng.TestNG.runSuitesSequentially(TestNG.java:1212)
+at org.testng.TestNG.runSuitesLocally(TestNG.java:1134)
+at org.testng.TestNG.runSuites(TestNG.java:1063)
+at org.testng.TestNG.run(TestNG.java:1031)
+at org.testng.remote.AbstractRemoteTestNG.run(AbstractRemoteTestNG.java:115)
+at org.testng.remote.RemoteTestNG.initAndRun(RemoteTestNG.java:251)
+at org.testng.remote.RemoteTestNG.main(RemoteTestNG.java:77)
+]]>
+            </full-stacktrace>
+          </exception> <!-- org.openqa.selenium.TimeoutException -->
           <reporter-output>
           </reporter-output>
-        </test-method> <!-- userPreference -->
-        <test-method is-config="true" signature="getResult(org.testng.ITestResult)[pri:0, instance:samyak_Preferences.UserPreference@71a8adcf]" started-at="2022-04-01T14:28:21 IST" name="getResult" finished-at="2022-04-01T14:28:21 IST" duration-ms="1" status="PASS">
-          <params>
-            <param index="0">
-              <value>
-                <![CDATA[[TestResult name=userPreference status=SUCCESS method=UserPreference.userPreference()[pri:0, instance:samyak_Preferences.UserPreference@71a8adcf] output={null}]]]>
-              </value>
-            </param>
-          </params>
+        </test-method> <!-- SvcDetail -->
+        <test-method is-config="true" signature="getResult(org.testng.ITestResult)[pri:0, instance:connect_OCBaseMethods.ServiceDetail@29215f06]" started-at="2022-07-27T17:17:26 IST" name="getResult" finished-at="1970-01-01T05:30:00 IST" duration-ms="-1658922446709" status="SKIP">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- getResult -->
-        <test-method is-config="true" signature="logOut()[pri:0, instance:samyak_Preferences.UserPreference@71a8adcf]" started-at="2022-04-01T14:28:21 IST" name="logOut" finished-at="2022-04-01T14:28:36 IST" duration-ms="15321" status="PASS">
+        <test-method is-config="true" signature="SendEmail()[pri:0, instance:connect_OCBaseMethods.ServiceDetail@29215f06]" started-at="2022-07-27T17:17:26 IST" name="SendEmail" finished-at="1970-01-01T05:30:00 IST" duration-ms="-1658922446795" status="SKIP">
           <reporter-output>
           </reporter-output>
-        </test-method> <!-- logOut -->
-        <test-method is-config="true" signature="closeBrowser()[pri:0, instance:samyak_Preferences.UserPreference@71a8adcf]" started-at="2022-04-01T14:28:36 IST" name="closeBrowser" finished-at="2022-04-01T14:28:37 IST" duration-ms="568" status="PASS">
-          <reporter-output>
-          </reporter-output>
-        </test-method> <!-- closeBrowser -->
-      </class> <!-- samyak_Preferences.UserPreference -->
-    </test> <!-- UserPreference -->
-  </suite> <!-- ConnectSuite -->
+        </test-method> <!-- SendEmail -->
+      </class> <!-- connect_OCBaseMethods.ServiceDetail -->
+    </test> <!-- Default test -->
+  </suite> <!-- Default suite -->
 </testng-results>
