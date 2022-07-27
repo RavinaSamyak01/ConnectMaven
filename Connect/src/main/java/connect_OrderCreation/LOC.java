@@ -20,10 +20,10 @@ public class LOC extends BaseInit {
 		JavascriptExecutor jse = (JavascriptExecutor) driver;// scroll,click
 		WebDriverWait wait = new WebDriverWait(driver, 50);// wait time
 
-		Thread.sleep(2000);
-		WebElement order = wait.until(ExpectedConditions.elementToBeClickable(By.id("btnOrderProcess")));
+		WebElement order = isElementPresent("OCOProcess_id");
+		wait.until(ExpectedConditions.elementToBeClickable(order));
 		jse.executeScript("arguments[0].click();", order);
-		Thread.sleep(2000);
+		wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("loaderDiv")));
 
 		boolean sameairport = driver.getPageSource()
 				.contains("Pickup and Delivery airport are different. Do you want to make it same?");

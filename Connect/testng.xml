@@ -1,9 +1,74 @@
 <!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
 <suite name="ConnectSuite">
-	<test thread-count="5" name="UserPreference">
-		<classes>
-			<class name="samyak_Preferences.UserPreference"></class>
-		</classes>
-	</test> <!-- NASmoke -->
 
-</suite> <!-- NASuite -->
+<!--<test thread-count="5" name="CreateOrder">
+		<classes>
+			<class name="connect_OrderCreation.CreateOrder"></class>
+		</classes>
+	</test> 
+	
+	<test thread-count="5" name="LOC">
+		<classes>
+			<class name="connect_OrderCreation.LOC"></class>
+		</classes>
+	</test> 
+	
+	<test thread-count="5" name="SD">
+		<classes>
+			<class name="connect_OrderCreation.SD"></class>
+		</classes>
+	</test> 
+	
+	<test thread-count="5" name="PA">
+		<classes>
+			<class name="connect_OrderCreation.PA"></class>
+		</classes>
+	</test> 
+	
+	<test thread-count="5" name="SDC">
+		<classes>
+			<class name="connect_OrderCreation.SDC"></class>
+		</classes>
+	</test> 
+	
+	<test thread-count="5" name="DRV">
+		<classes>
+			<class name="connect_OrderCreation.DRV"></class>
+		</classes>
+	</test> 
+	
+	<test thread-count="5" name="FRA">
+		<classes>
+			<class name="connect_OrderCreation.FRA"></class>
+		</classes>
+	</test> 
+	
+	<test thread-count="5" name="FRG">
+		<classes>
+			<class name="connect_OrderCreation.FRG"></class>
+		</classes>
+	</test> 
+	
+	<test thread-count="5" name="P3P">
+		<classes>
+			<class name="connect_OrderCreation.P3P"></class>
+		</classes>
+	</test> 
+	
+	<test thread-count="5" name="AIR">
+		<classes>
+			<class name="connect_OrderCreation.AIR"></class>
+		</classes>
+	</test>  -->
+	
+	<test thread-count="5" name="OrderCreationProcessing">
+		<classes>
+			<class name="connect_OCBaseMethods.ServiceDetail"></class>
+		</classes>
+	</test> 
+	
+	
+	
+	
+
+</suite> 

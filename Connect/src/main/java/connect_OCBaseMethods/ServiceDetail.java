@@ -10,7 +10,6 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.Test;
-
 import connect_BasePackage.BaseInit;
 import connect_OrderCreation.AIR;
 import connect_OrderCreation.DRV;
@@ -29,218 +28,331 @@ public class ServiceDetail extends BaseInit {
 	public static void SvcDetail() throws Exception {
 		JavascriptExecutor jse = (JavascriptExecutor) driver;// scroll,click
 		WebDriverWait wait = new WebDriverWait(driver, 50);// wait time
-
+//		/Actions act = new Actions(driver);
 		Robot r = new Robot();
 
-		for (int i = 2; i < 10; i++) {
-			Thread.sleep(2000);
-			WebElement Order = wait.until(ExpectedConditions.elementToBeClickable(By.id("hlkNewOrder"))); // Click on
-																											// New Order
-																											// Link
-			jse.executeScript("arguments[0].click();", Order);
-			Thread.sleep(10000);
+		for (int i = 1; i < 10; i++) {
 
-			ExcelDataProvider excelDataProvider = new ExcelDataProvider(); // Call ExcelDataProvider class for Read/
-																			// Write data
-			excelDataProvider.getData("Sheet1", i, 0);
-			Thread.sleep(5000);
+			// --Click on New Order
+			WebElement Order = isElementPresent("NewOrder_id");
+			wait.until(ExpectedConditions.visibilityOf(Order));
+			wait.until(ExpectedConditions.elementToBeClickable(Order));
+			jse.executeScript("arguments[0].click();", Order);
+
+			// --Waiting for Order section
+			wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.id("idOrder")));
+			wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("loaderDiv")));
+
+			// --get the Data
+			getData("Sheet1", i, 0);
 
 			// Enter Caller
-			String Caller = excelDataProvider.getData("Sheet1", i, 0);
-			driver.findElement(By.id("txtCallerName")).sendKeys(Caller);
+			String Caller = getData("Sheet1", i, 0);
+			isElementPresent("OCCallerName_id").clear();
+			isElementPresent("OCCallerName_id").sendKeys(Caller);
+			logs.info("Entered CallerName");
+
 			// Enter Phone
-			String Phone = excelDataProvider.getData("Sheet1", i, 1);
-			driver.findElement(By.id("txtContactPhone")).sendKeys(Phone);
-			Thread.sleep(1000);
+			String Phone = getData("Sheet1", i, 1);
+			isElementPresent("OCContactPh_id").clear();
+			isElementPresent("OCContactPh_id").sendKeys(Phone);
+			logs.info("Entered Contact/Phone");
 
 			// Enter Account#
-			String Account = excelDataProvider.getData("Sheet1", i, 2);
-			driver.findElement(By.id("txtCustCode")).sendKeys(Account);
-			driver.findElement(By.id("txtCustCode")).sendKeys(Keys.TAB);
-			Thread.sleep(10000);
+			String Account = getData("Sheet1", i, 2);
+			isElementPresent("OCCustCode_id").clear();
+			isElementPresent("OCCustCode_id").sendKeys(Account);
+			isElementPresent("OCCustCode_id").sendKeys(Keys.TAB);
+			logs.info("Entered Customer Code");
+			wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("loaderDiv")));
 
-			String PUZip = excelDataProvider.getData("Sheet1", i, 3); // Enter Pickup Zip code
-			driver.findElement(By.id("txtPUZipcode")).sendKeys(PUZip);
-			driver.findElement(By.id("txtPUZipcode")).sendKeys(Keys.TAB);
-			Thread.sleep(2000);
+			// --wait until pU section is enabled
+			try {
+				wait.until(ExpectedConditions
+						.invisibilityOfElementLocated(By.xpath("//*[@id=\"PickupSection\"][@disabled=\"disabled\"]")));
+			} catch (Exception PUDIsable) {
+				logs.error(PUDIsable);
+				getScreenshot(driver, "PUSDisabled");
+				WebDriverWait waitPUD = new WebDriverWait(driver, 120);// wait time
+				waitPUD.until(ExpectedConditions
+						.invisibilityOfElementLocated(By.xpath("//*[@id=\"PickupSection\"][@disabled=\"disabled\"]")));
+				logs.info("PU Section is Enabled");
 
-			WebElement Puaddr = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id='idPUAddr']")));
+			}
+			// Enter Pickup Zip code
+			String PUZip = getData("Sheet1", i, 3);
+			isElementPresent("OCPUZp_id").clear();
+			isElementPresent("OCPUZp_id").sendKeys(PUZip);
+			isElementPresent("OCPUZp_id").sendKeys(Keys.TAB);
+			logs.info("Entered PU Zip");
+			wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("loaderDiv")));
+
+			// --PU Address
+			WebElement Puaddr = isElementPresent("OCPUAdd_id");
+			wait.until(ExpectedConditions.elementToBeClickable(Puaddr));
 			jse.executeScript("arguments[0].click();", Puaddr);
-			Thread.sleep(4000);
+			logs.info("Click on PU Address");
+			wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("loaderDiv")));
 
-			String PickupCom = excelDataProvider.getData("Sheet1", i, 4);
-			driver.findElement(By.id("txtPUCompany")).sendKeys(PickupCom); // Enter Pickup Company Name
+			// --PU Company
+			String PickupCom = getData("Sheet1", i, 4);
+			isElementPresent("OCPUComp_id").clear();
+			isElementPresent("OCPUComp_id").sendKeys(PickupCom);
+			logs.info("Entered PU Company");
 
-			String PUAddress1 = excelDataProvider.getData("Sheet1", i, 5);
-			driver.findElement(By.id("txtPUAddrLine1")).sendKeys(PUAddress1); // Pu Address Line 1
+			// --PU AddressLine1
+			String PUAddress1 = getData("Sheet1", i, 5);
+			isElementPresent("OCPUAddL1_id").clear();
+			isElementPresent("OCPUAddL1_id").sendKeys(PUAddress1);
+			logs.info("Entered PU AddressLine1");
 
-			// String Add2 = excelDataProvider.getData("Sheet1", i, 6);
+			// String Add2 = getData("Sheet1", i, 6);
 			// driver.findElement(By.id("txtPUAddrLine2")).sendKeys(Add2);
 
-			String Attn = excelDataProvider.getData("Sheet1", i, 7);
-			driver.findElement(By.id("txtPUAttention")).sendKeys(Attn); // Pu Attn
+			// --PU Attention
+			String Attn = getData("Sheet1", i, 7);
+			isElementPresent("OCPUAtt_id").clear();
+			isElementPresent("OCPUAtt_id").sendKeys(Attn);
+			logs.info("Entered PU Attention");
 
-			String PuPhone = excelDataProvider.getData("Sheet1", i, 8);
-			driver.findElement(By.id("txtPUPhone")).sendKeys(PuPhone); // Pickup Phone
+			// --PU Phone
+			String PuPhone = getData("Sheet1", i, 8);
+			isElementPresent("OCPUPhone_id").clear();
+			isElementPresent("OCPUPhone_id").sendKeys(PuPhone);
+			logs.info("Entered PU Phone");
 
-			// String PUInst = excelDataProvider.getData("Sheet1", i, 9);
+			// String PUInst = getData("Sheet1", i, 9);
 			// driver.findElement(By.id(" ")).sendKeys(PUInst);
-			Thread.sleep(6000);
-			rdytime = driver.findElement(By.id("txtReadyforPickupTime")).getAttribute("value"); // Get Ready Time in
-																								// variable
-			rectime = driver.findElement(By.id("txtReadyforPickupTime")).getAttribute("value");
-			arrtime = driver.findElement(By.id("txtReadyforPickupTime")).getAttribute("value");
+
+			// --Wait to get PU Ready time
+			try {
+				wait.until(ExpectedConditions.invisibilityOfElementLocated(
+						By.xpath("//input[contains(@class,'ng-invalid ng-invalid-required')]")));
+				logs.info("PU Ready time is blank");
+			} catch (Exception PUTimeNotExist) {
+				logs.error(PUTimeNotExist);
+				logs.info("PU Ready time is exist");
+
+			}
+			// --Getting ready PickupTime
+			rdytime = isElementPresent("OCPURTime_id").getAttribute("value");
+			logs.info("PU Ready Time==" + rdytime);
+
+			rectime = isElementPresent("OCPURTime_id").getAttribute("value");
+			logs.info("PU Receive Time==" + rectime);
+
+			arrtime = isElementPresent("OCPURTime_id").getAttribute("value");
+			logs.info("PU Arrival Time==" + arrtime);
+
 			// tndrtime = driver.findElement(By.id("txtReadyforPickupTime")).getText();
 
-			Thread.sleep(3000);
-			String pmi = driver.findElement(By.id("txtPUMiles")).getAttribute("value");
-			Thread.sleep(1000);
+			// --PU Miles
+			String pmi = isElementPresent("OCPUMiles_id").getAttribute("value");
+			logs.info("PU Mileage==" + pmi);
 
-			String DLZip = excelDataProvider.getData("Sheet1", i, 11);
-			driver.findElement(By.id("txtDLZipCode")).sendKeys(DLZip);
-			driver.findElement(By.id("txtDLZipCode")).sendKeys(Keys.TAB);
-			Thread.sleep(12000);
+			// --Del Zip
+			String DLZip = getData("Sheet1", i, 11);
+			isElementPresent("OCDLZip_id").clear();
+			isElementPresent("OCDLZip_id").sendKeys(DLZip);
+			logs.info("Entered DL Zip");
+			wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("loaderDiv")));
 
-			WebElement DL = driver.findElement(By.xpath("//*[@id='idDLAddr']"));
+			// --Del Address
+			WebElement DL = isElementPresent("OCDLAdd_id");
 			jse.executeScript("arguments[0].click();", DL);
+			logs.info("Entered DL Address");
 
-			Thread.sleep(2000);
+			// --DEL Company
+			String DelCompany = getData("Sheet1", i, 12);
+			isElementPresent("OCDLComp_id").clear();
+			isElementPresent("OCDLComp_id").sendKeys(DelCompany);
+			logs.info("Entered DL Company");
 
-			String DelCompany = excelDataProvider.getData("Sheet1", i, 12);
-			driver.findElement(By.id("txtDLCompany")).sendKeys(DelCompany);
+			// --DEL Address1
+			String DLAddress1 = getData("Sheet1", i, 13);
+			isElementPresent("OCDLAddL1_id").clear();
+			isElementPresent("OCDLAddL1_id").sendKeys(DLAddress1);
+			logs.info("Entered DL Address Line1");
 
-			String DLAddress1 = excelDataProvider.getData("Sheet1", i, 13);
-			driver.findElement(By.id("txtDLAddrLine1")).sendKeys(DLAddress1);
-
-			// String DLAddr2 = excelDataProvider.getData("Sheet1", i, 14);
+			// String DLAddr2 = getData("Sheet1", i, 14);
 			// driver.findElement(By.id("txtDelAddrLine2")).sendKeys(DLAddr2);
 
-			Thread.sleep(3000);
+			// --DL Attention
+			String DLAttn = getData("Sheet1", i, 15);
+			isElementPresent("OCDLAtt_id").clear();
+			isElementPresent("OCDLAtt_id").sendKeys(DLAttn);
+			logs.info("Entered DL Attention");
 
-			String DLAttn = excelDataProvider.getData("Sheet1", i, 15);
-			driver.findElement(By.id("txtDLAttention")).sendKeys(DLAttn);
+			// --DL Phone
+			String DLPhone = getData("Sheet1", i, 16);
+			isElementPresent("OCDLPhone_id").clear();
+			isElementPresent("OCDLPhone_id").sendKeys(DLPhone);
+			logs.info("Entered DL Phone");
 
-			String DLPhone = excelDataProvider.getData("Sheet1", i, 16);
-			driver.findElement(By.id("txtDLPhone")).sendKeys(DLPhone);
+			// --DL Miles
+			String dmi = isElementPresent("OCDLMiles_id").getAttribute("value");
+			logs.info("DL Miles==" + dmi);
 
-			Thread.sleep(3000);
-			String dmi = driver.findElement(By.id("txtDelMiles")).getAttribute("value");
-
-			// String DLInst = excelDataProvider.getData("Sheet1", i, 17);
+			// String DLInst = getData("Sheet1", i, 17);
 			// driver.findElement(By.id("txtDLPhone")).sendKeys(DLInst);
-			Thread.sleep(1000);
 			// String srv =
 			// driver.findElement(By.id("idNewOrderServiceId")).getAttribute("value");
 
-			Thread.sleep(3000);
-			driver.findElement(By.id("txtTotalQty_NewOrder")).clear();
-			driver.findElement(By.id("txtTotalQty_NewOrder")).sendKeys("1");
-			driver.findElement(By.id("txtTotalQty_NewOrder")).sendKeys(Keys.TAB);
+			// --Total Qty
+			isElementPresent("OCTotalQty_id").clear();
+			isElementPresent("OCTotalQty_id").sendKeys("1");
+			isElementPresent("OCTotalQty_id").sendKeys(Keys.TAB);
+			logs.info("Entered Total Qty");
 
-			Thread.sleep(1000);
-			String Weight = excelDataProvider.getData("Sheet1", i, 19);
-			driver.findElement(By.xpath(
-					"html/body/div[2]/section/div[2]/div/div/div[2]/div[2]/div/ng-form[2]/div[3]/div/fieldset/div[2]/package-controller/div[3]/div[2]/fieldset/div/div[2]/div[2]/div[1]/input"))
-					.clear();
-			driver.findElement(By.xpath(
-					"html/body/div[2]/section/div[2]/div/div/div[2]/div[2]/div/ng-form[2]/div[3]/div/fieldset/div[2]/package-controller/div[3]/div[2]/fieldset/div/div[2]/div[2]/div[1]/input"))
-					.sendKeys(Weight);
-			driver.findElement(By.xpath(
-					"html/body/div[2]/section/div[2]/div/div/div[2]/div[2]/div/ng-form[2]/div[3]/div/fieldset/div[2]/package-controller/div[3]/div[2]/fieldset/div/div[2]/div[2]/div[1]/input"))
-					.sendKeys(Keys.TAB);
+			// --Weight
+			String Weight = getData("Sheet1", i, 19);
+			isElementPresent("OCWeight_id").clear();
+			isElementPresent("OCWeight_id").sendKeys(Weight);
+			isElementPresent("OCWeight_id").sendKeys(Keys.TAB);
+			logs.info("Entered Weight");
 
-			Thread.sleep(1000);
+			// --Length
+			String Len = getData("Sheet1", i, 20);
+			isElementPresent("OCLength_id").clear();
+			isElementPresent("OCLength_id").sendKeys(Len);
+			isElementPresent("OCLength_id").sendKeys(Keys.TAB);
+			logs.info("Entered Length");
 
-			String Len = excelDataProvider.getData("Sheet1", i, 20);
-			driver.findElement(By.id("txtlength_NewOrder")).clear();
-			driver.findElement(By.id("txtlength_NewOrder")).sendKeys(Len);
+			// --Width
+			String Width = getData("Sheet1", i, 21);
+			isElementPresent("OCWidth_id").clear();
+			isElementPresent("OCWidth_id").sendKeys(Width);
+			isElementPresent("OCWidth_id").sendKeys(Keys.TAB);
+			logs.info("Entered Width");
 
-			String Width = excelDataProvider.getData("Sheet1", i, 21);
-			driver.findElement(By.id("txtwidth_NewOrder")).clear();
-			driver.findElement(By.id("txtwidth_NewOrder")).sendKeys(Width);
+			// --Height
+			String Height = getData("Sheet1", i, 22);
+			isElementPresent("OCHeight_id").clear();
+			isElementPresent("OCHeight_id").sendKeys(Height);
+			isElementPresent("OCHeight_id").sendKeys(Keys.TAB);
+			logs.info("Entered Height");
 
-			String Height = excelDataProvider.getData("Sheet1", i, 22);
-			driver.findElement(By.id("txtheight_NewOrder")).clear();
-			driver.findElement(By.id("txtheight_NewOrder")).sendKeys(Height);
+			// --Commodity
+			String Commodity = getData("Sheet1", i, 23);
+			isElementPresent("OCDesc_id").clear();
+			isElementPresent("OCDesc_id").sendKeys(Commodity);
+			isElementPresent("OCDesc_id").sendKeys(Keys.TAB);
+			logs.info("Entered Commodity");
 
-			// Thread.sleep(6000);
-
-			String Commodity = excelDataProvider.getData("Sheet1", i, 23);
-			driver.findElement(By.id("txtdescription_NewOrder")).sendKeys(Commodity);
-			driver.findElement(By.id("txtdescription_NewOrder")).sendKeys(Keys.TAB);
-
-			Thread.sleep(7000);
+			// --Scroll Up
 			r.keyPress(KeyEvent.VK_TAB);
-
 			jse.executeScript("window.scrollBy(0,250)", "");
+			Thread.sleep(2000);
 
-			Thread.sleep(3000);
+			// --Total Mileage
+			String tmile = isElementPresent("OCTotalMil_id").getAttribute("value");
+			logs.info("Total Mileage==" + tmile);
 
-			// driver.findElement(By.xpath("//*[@id='ShipmentChargeSection']/fieldset/div[1]/div[1]/div[1]/a")).click();
-			Thread.sleep(9000);
-
-			String tmile = driver.findElement(By.id("txtTotalMileage")).getAttribute("value");
-
-			excelDataProvider.writeData("Sheet1", i, 25, pmi);
-			excelDataProvider.writeData("Sheet1", i, 27, dmi);
-			excelDataProvider.writeData("Sheet1", i, 29, tmile);
+			setData("Sheet1", i, 25, pmi);
+			setData("Sheet1", i, 27, dmi);
+			setData("Sheet1", i, 29, tmile);
 
 			if (i == 1) // LOC service
 			{
-				Thread.sleep(3000);
+				logs.info("Service=LOC");
+				msg.append("Service=LOC" + "\n");
+				msg.append("PU Mileage=" + pmi + "\n");
+				msg.append("DL Mileage=" + dmi + "\n");
+				msg.append("Total Mileage=" + tmile + "\n\n");
+
 				LOC.locLocal();
 
 			}
 
 			if (i == 2) // SD Service
 			{
-				Thread.sleep(3000);
+				logs.info("Service=SD");
+				msg.append("Service=SD" + "\n");
+				msg.append("PU Mileage=" + pmi + "\n");
+				msg.append("DL Mileage=" + dmi + "\n");
+				msg.append("Total Mileage=" + tmile + "\n\n");
+
 				SD.sdSameDay();
 			}
 
 			if (i == 3) // P3P Service
 			{
-				Thread.sleep(3000);
+				logs.info("Service=P3P");
+				msg.append("Service=P3P" + "\n");
+				msg.append("PU Mileage=" + pmi + "\n");
+				msg.append("DL Mileage=" + dmi + "\n");
+				msg.append("Total Mileage=" + tmile + "\n\n");
+
 				P3P.p3pservice();
 			}
 
 			if (i == 4) // PA Service
 			{
-				Thread.sleep(3000);
+				logs.info("Service=PA");
+				msg.append("Service=PA" + "\n");
+				msg.append("PU Mileage=" + pmi + "\n");
+				msg.append("DL Mileage=" + dmi + "\n");
+				msg.append("Total Mileage=" + tmile + "\n\n");
+
 				PA.paPriorityAir();
 			}
 
 			if (i == 5) // DRV Service with HAS
 			{
-				Thread.sleep(3000);
+				logs.info("Service=DRV");
+				msg.append("Service=DRV" + "\n");
+				msg.append("PU Mileage=" + pmi + "\n");
+				msg.append("DL Mileage=" + dmi + "\n");
+				msg.append("Total Mileage=" + tmile + "\n\n");
+
 				DRV.drvDriver();
 
 			}
 
 			if (i == 6) // AIR with HAA
 			{
-				Thread.sleep(3000);
+				logs.info("Service=AIR with HAA");
+				msg.append("Service=AIR with HAA" + "\n");
+				msg.append("PU Mileage=" + pmi + "\n");
+				msg.append("DL Mileage=" + dmi + "\n");
+				msg.append("Total Mileage=" + tmile + "\n\n");
+
 				AIR.airService();
 
 			}
 
 			if (i == 7) // SDC Service
 			{
-				Thread.sleep(3000);
+				logs.info("Service=SDC");
+				msg.append("Service=SDC" + "\n");
+				msg.append("PU Mileage=" + pmi + "\n");
+				msg.append("DL Mileage=" + dmi + "\n");
+				msg.append("Total Mileage=" + tmile + "\n\n");
+
 				SDC.sdcSameDayCity();
 
 			}
 
 			if (i == 8) // FRA Service
 			{
-				Thread.sleep(3000);
+				logs.info("Service=FRA");
+				msg.append("Service=FRA" + "\n");
+				msg.append("PU Mileage=" + pmi + "\n");
+				msg.append("DL Mileage=" + dmi + "\n");
+				msg.append("Total Mileage=" + tmile + "\n\n");
+
 				FRA.fraFreight();
 
 			}
 
 			if (i == 9) // FRG Service
 			{
-				Thread.sleep(3000);
+				logs.info("Service=FRG");
+				msg.append("Service=FRG" + "\n");
+				msg.append("PU Mileage=" + pmi + "\n");
+				msg.append("DL Mileage=" + dmi + "\n");
+				msg.append("Total Mileage=" + tmile + "\n\n");
+
 				FRG.frgFreight();
 
 			}

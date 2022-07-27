@@ -12,7 +12,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
-import java.util.ResourceBundle;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
@@ -53,16 +52,14 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 
 public class BaseInit {
 
-	public static ResourceBundle rb = ResourceBundle.getBundle("config");
 	public static StringBuilder msg = new StringBuilder();
 	public static WebDriver driver;
 	public static Properties storage = new Properties();
-	String baseUrl = rb.getString("URL");
 
 	public static Logger logs;
 	public static ExtentReports report;
 	public static ExtentTest test;
-
+	String BaseURL;
 	@BeforeSuite
 	public void beforeMethod() throws Exception {
 		if (driver == null) {
@@ -86,8 +83,8 @@ public class BaseInit {
 			options.addArguments("--proxy-bypass-list=*");
 			options.addArguments("--disable-extensions");
 			options.addArguments("--no-sandbox");
-			options.addArguments("window-size=1036,776");
-			// options.addArguments("--start-maximized");
+			//options.addArguments("window-size=1036,776");
+			options.addArguments("--start-maximized");
 			String downloadFilepath = System.getProperty("user.dir") + "\\src\\main\\resources";
 			HashMap<String, Object> chromePrefs = new HashMap<String, Object>();
 			chromePrefs.put("profile.default_content_settings.popups", 0);
@@ -264,9 +261,9 @@ public class BaseInit {
 		WebDriverWait wait = new WebDriverWait(driver, 50);
 		Actions act = new Actions(driver);
 		String Env = storage.getProperty("Env");
-
+		String baseUrl = null;
 		if (Env.equalsIgnoreCase("Pre-Prod")) {
-			String baseUrl = storage.getProperty("PREPRODURL");
+			 baseUrl = storage.getProperty("PREPRODURL");
 			driver.get(baseUrl);
 			Thread.sleep(2000);
 			try {
@@ -306,7 +303,7 @@ public class BaseInit {
 			}
 
 		} else if (Env.equalsIgnoreCase("STG")) {
-			String baseUrl = storage.getProperty("STGURL");
+			 baseUrl = storage.getProperty("STGURL");
 			driver.get(baseUrl);
 			Thread.sleep(2000);
 			try {
@@ -345,7 +342,7 @@ public class BaseInit {
 			}
 
 		} else if (Env.equalsIgnoreCase("DEV")) {
-			String baseUrl = storage.getProperty("DEVURL");
+			 baseUrl = storage.getProperty("DEVURL");
 			driver.get(baseUrl);
 			Thread.sleep(2000);
 			try {
@@ -383,6 +380,8 @@ public class BaseInit {
 
 			}
 		}
+		
+		BaseURL=baseUrl;
 		highLight(isElementPresent("Login_id"), driver);
 		isElementPresent("Login_id").click();
 		logs.info("Login done");
@@ -622,7 +621,7 @@ public class BaseInit {
 		// Send Details email
 
 		msg.append("*** This is automated generated email and send through automation script ***" + "\n");
-		msg.append("Process URL : " + baseUrl + "\n");
+		msg.append("Process URL : " + BaseURL + "\n");
 		msg.append("Please find attached file of Report and Log");
 
 		String Env = storage.getProperty("Env");
