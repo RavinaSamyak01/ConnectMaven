@@ -11,37 +11,49 @@ import org.testng.annotations.Test;
 import connect_BasePackage.BaseInit;
 
 public class ReadyForDispatch extends BaseInit {
-	
+
 	@Test
-	public static void pickupAlert() throws Exception
-	{
+	public static void pickupAlert() throws Exception {
 		JavascriptExecutor jse = (JavascriptExecutor) driver;// scroll,click
 		WebDriverWait wait = new WebDriverWait(driver, 50);// wait time
-		
-		Thread.sleep(4000);
-		if (driver.findElement(By.id("cmbContacted")).isDisplayed()){
-			WebElement email = wait.until(ExpectedConditions.elementToBeClickable(By.id("cmbContacted")));  
-		    jse.executeScript("arguments[0].click();",email);
-		    	Select list1 = new Select(email);
-		    	  list1.selectByValue("number:377");
-              System.out.println("email selected");
-		}else {		
-		Select Contacttype = new Select(driver.findElement(By.id("cmbContacted")));
-		Contacttype.selectByVisibleText("Email");
-		Thread.sleep(4000);
+
+		// --Check Contacted
+		if (isElementPresent("TLRDContacted_id").isDisplayed()) {
+			WebElement email = isElementPresent("TLRDContacted_id");
+			wait.until(ExpectedConditions.elementToBeClickable(email));
+			jse.executeScript("arguments[0].click();", email);
+			Select CBy = new Select(email);
+			CBy.selectByValue("number:377");
+			System.out.println("email selected");
+			logs.info("Email is selected as a Contact By");
+		} else {
+			Select Contacttype = new Select(isElementPresent("TLRDContacted_id"));
+			Contacttype.selectByVisibleText("Email");
+			logs.info("Email is selected as a Contact By");
+
 		}
-		WebElement email = wait.until(ExpectedConditions.elementToBeClickable(By.id("lblContactedValue1")));
-		email.clear();
-		email.sendKeys("tathya.gandhi@samyak.com");			
-		Thread.sleep(4000);
-		WebElement spoke = wait.until(ExpectedConditions.elementToBeClickable(By.id("txtSpokeWith")));
+
+		// --Enter ContactBy Value
+		WebElement emailValue = isElementPresent("TLRDContValue_id");
+		wait.until(ExpectedConditions.elementToBeClickable(emailValue));
+		emailValue.clear();
+		emailValue.sendKeys("Ravina.prajapati@samyak.com");
+		logs.info("Entered EmailID");
+
+		// --Spoke With
+		WebElement spoke = isElementPresent("TLRDSpokeW_id");
+		wait.until(ExpectedConditions.elementToBeClickable(spoke));
 		spoke.clear();
-		spoke.sendKeys("Abhishek");
-		Thread.sleep(4000);
-		
-		WebElement Sendpualert = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id='EditPUDLXERAlertStages']/div[2]/div[2]/div[6]/button")));
+		spoke.sendKeys("Ravina");
+		logs.info("Entered Spoke With");
+
+		// --Click on Send PU Alert
+		WebElement Sendpualert = isElementPresent("TLRDSPUALert_id");
+		wait.until(ExpectedConditions.elementToBeClickable(Sendpualert));
 		Sendpualert.click();
-		Thread.sleep(5000);
+		logs.info("Clicked on Send Pu Alert button");
+		wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("loaderDiv")));
+
 	}
-	
+
 }

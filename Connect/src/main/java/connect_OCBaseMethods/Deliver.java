@@ -1,6 +1,7 @@
 package connect_OCBaseMethods;
 
-import java.time.LocalDateTime;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.TimeZone;
 
 import org.openqa.selenium.By;
@@ -12,74 +13,114 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.Test;
 
 public class Deliver extends ServiceDetail {
-	
+
 	@Test
-	public static void confirmDelivery() throws Exception
-	{
+	public static void confirmDelivery() throws Exception {
 		JavascriptExecutor jse = (JavascriptExecutor) driver;// scroll,click
 		WebDriverWait wait = new WebDriverWait(driver, 50);// wait time
-		
-			String svc = driver.findElement(By.id("lblServiceID")).getText();
-						
-			if(svc.equals("LOC") || svc.equals("DRV")|| svc.equals("SDC")|| svc.equals("FRG"))
-				{	
-				driver.findElement(By.id("txtActualDeliveryTime")).sendKeys(rdytime);
-				Thread.sleep(3000);
-				driver.findElement(By.id("txtDeliverySignature")).sendKeys("asharma");
-				Thread.sleep(3000);
-				driver.findElement(By.id("GreenTickDropped")).click();
-				Thread.sleep(3000);
-				boolean dlpop = driver.getPageSource().contains("NetLink Global Logistics");			
-				
-						if(dlpop == true)
-						{
-							driver.findElement(By.id("btnOk")).click();				
-						}
-					
-						Thread.sleep(4000);
-						}
-				
-			if(svc.equals("SD") || svc.equals("PA")|| svc.equals("FRA"))
-			{	
-				String tzone = driver.findElement(By.id("lblActualDeliveryTimeSZone")).getText();
-				String rectime = getTime(tzone);
-				driver.findElement(By.id("txtActualDeliveryTime")).sendKeys(rectime);
-				driver.findElement(By.id("txtActualDeliveryTime")).sendKeys(Keys.TAB);
-				Thread.sleep(9000);
-				driver.findElement(By.id("txtDeliverySignature")).sendKeys("A. Sharma");
-				Thread.sleep(2000);
-				WebElement btn = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id=\"btnGreenTickDropped\"]")));
-				jse.executeScript("arguments[0].click();",btn);
-				Thread.sleep(4000);
+
+		// --Get the ServiceID
+		String svc = isElementPresent("TLServID_id").getText();
+		System.out.println(svc);
+		logs.info("ServiceID=" + svc);
+
+		if (svc.equals("LOC") || svc.equals("DRV") || svc.equals("SDC") || svc.equals("FRG")) {
+			// --Enter Actual DL time
+			isElementPresent("TLDActDLTime_id").clear();
+			isElementPresent("TLDActDLTime_id").sendKeys(rdytime);
+			logs.info("Enter Actual DL Time");
+
+			// --Enter SIgnature
+			isElementPresent("TLDSignature_id").clear();
+			isElementPresent("TLDSignature_id").sendKeys("RVOza");
+			logs.info("Enter Signature");
+
+			// --Click on Confirm DL
+			isElementPresent("TLDConfDL_id").click();
+			logs.info("Clicked on Confirm DEL button");
+			wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("loaderDiv")));
+
+			// --Pop Up
+			boolean dlpop = driver.getPageSource().contains("NetLink Global Logistics");
+
+			if (dlpop == true) {
+				isElementPresent("TLDPUOK_id").click();
+				logs.info("Clicked on OK button of pop up");
+
 			}
-			
-			if(svc.equals("AIR"))
-			{
-				String tzone = driver.findElement(By.id("spnActualDel")).getText();
-				String rectime = getTime(tzone);
-				driver.findElement(By.id("txtOnHandActualDeliveryTime")).sendKeys(rectime);
-				driver.findElement(By.id("txtOnHandActualDeliveryTime")).sendKeys(Keys.TAB);
-				driver.findElement(By.id("txtSignature")).sendKeys("A. Sharma");
-				driver.findElement(By.id("btnHAAOnHandDeliveryStages")).click();
-				Thread.sleep(4000);
-			}
-			
+
+			wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("loaderDiv")));
 		}
-	
-	public static String getTime(String timeZone)
-	{
-		
-		LocalDateTime localNow = LocalDateTime.now(TimeZone.getTimeZone(timeZone).toZoneId());
-		//DateTimeFormatter formatter = DateTimeFormatter.ISO_TIME;     
-		String text = Integer.toString(localNow.getHour());
-		String text1 = "";
-	    if(localNow.getMinute()<10) {
-	    	text1 = "0".concat(Integer.toString(localNow.getMinute()));
-	    }
-			    else {
-			    	text1 = Integer.toString(localNow.getMinute());
-			    }
-		text = text.concat(text1);
-		return text;
+
+		if (svc.equals("SD") || svc.equals("PA") || svc.equals("FRA")) {
+			// --Get the timeZone
+			String tzone = isElementPresent("TLDACDTimeZone_id").getText();
+			String rectime = getTime(tzone);
+
+			// --Enter Actual Del Time
+			isElementPresent("TLDActDLTime_id").clear();
+			isElementPresent("TLDActDLTime_id").sendKeys(rectime);
+			isElementPresent("TLDActDLTime_id").sendKeys(Keys.TAB);
+
+			// --Enter Signature
+			isElementPresent("TLDSignature_id").clear();
+			isElementPresent("TLDSignature_id").sendKeys("RVOza");
+			logs.info("Enter Signature");
+
+			// --Click on Confirm DL
+			WebElement ConDL = isElementPresent("TLDConfDL2_id");
+			wait.until(ExpectedConditions.elementToBeClickable(ConDL));
+			jse.executeScript("arguments[0].click();", ConDL);
+			logs.info("Clicked on Confirm DEL button");
+			wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("loaderDiv")));
+
+		}
+
+		if (svc.equals("AIR")) {
+			// --Get the timeZone
+			String tzone = isElementPresent("TLDAIRTZone_id").getText();
+			String rectime = getTime(tzone);
+
+			// --Enter Actual Del Time
+			isElementPresent("TLDAIRActualDTime_id").clear();
+			isElementPresent("TLDAIRActualDTime_id").sendKeys(rectime);
+			isElementPresent("TLDAIRActualDTime_id").sendKeys(Keys.TAB);
+
+			// --Enter Signature
+			isElementPresent("TLDAIRSign_id").clear();
+			isElementPresent("TLDAIRSign_id").sendKeys("RVOza");
+			logs.info("Enter Signature");
+
+			// --Click on Confirm DL
+			WebElement ConDL = isElementPresent("TLDAIRDLStage_id");
+			wait.until(ExpectedConditions.elementToBeClickable(ConDL));
+			jse.executeScript("arguments[0].click();", ConDL);
+			logs.info("Clicked on Confirm DEL button");
+			wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("loaderDiv")));
+
+		}
+
+	}
+
+	public static String getTime(String timeZone) {
+
+		System.out.println("ZoneID of is==" + timeZone);
+		logs.info("ZoneID of is==" + timeZone);
+		if (timeZone.equalsIgnoreCase("EDT")) {
+			timeZone = "America/New_York";
+		} else if (timeZone.equalsIgnoreCase("CDT")) {
+			timeZone = "CST";
+		} else if (timeZone.equalsIgnoreCase("PDT")) {
+			timeZone = "PST";
+		}
+
+		Date date = new Date();
+		SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
+		dateFormat.setTimeZone(TimeZone.getTimeZone(timeZone));
+		logs.info(dateFormat.format(date));
+		String Time = dateFormat.format(date);
+		System.out.println("Time==" + Time);
+		return Time;
+
 	}
 }

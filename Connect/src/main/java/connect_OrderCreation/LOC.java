@@ -9,7 +9,6 @@ import org.testng.annotations.Test;
 
 import connect_BasePackage.BaseInit;
 import connect_OCBaseMethods.Deliver;
-import connect_OCBaseMethods.ExcelDataProvider;
 import connect_OCBaseMethods.Pickup;
 import connect_OCBaseMethods.ReadyForDispatch;
 import connect_OCBaseMethods.TCAcknowledge;
@@ -20,6 +19,7 @@ public class LOC extends BaseInit {
 		JavascriptExecutor jse = (JavascriptExecutor) driver;// scroll,click
 		WebDriverWait wait = new WebDriverWait(driver, 50);// wait time
 
+		// --Click on Create Order button
 		WebElement order = isElementPresent("OCOProcess_id");
 		wait.until(ExpectedConditions.elementToBeClickable(order));
 		jse.executeScript("arguments[0].click();", order);
@@ -32,40 +32,48 @@ public class LOC extends BaseInit {
 			driver.findElement(By.xpath("/html/body/div[11]/div/div/div/div/div/div[2]/span/button[1]")).click();
 		}
 
-		String pck = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id='lblPickup']/span/b")))
-				.getText();
+		// --Get the PickUPID
+		WebElement PickUPID = isElementPresent("OCPickuPID_xpath");
+		wait.until(ExpectedConditions.elementToBeClickable(PickUPID));
+		String pck = PickUPID.getText();
 		System.out.println("Service LOC :: Pickup # " + pck);
 		logs.info("Service LOC :: Pickup # " + pck + "\n");
-		Thread.sleep(2000);
-		ExcelDataProvider excelDataProvider = new ExcelDataProvider();
-		excelDataProvider.writeData("Sheet1", 1, 32, pck);
-		Thread.sleep(2000);
-		driver.findElement(By.xpath(".//*[@id='hlkGoDirectlytoEditOrder']")).click();
-		Thread.sleep(2000);
+		msg.append("Service LOC :: Pickup # " + pck + "\n\n");
 
+
+		// --Set PickUPID
+		setData("Sheet1", 1, 32, pck);
+
+		// --Click on Edit Order
+		WebElement EditOrder = isElementPresent("OCEditOrder_id");
+		EditOrder.click();
+		logs.info("Clicked on Edit Order");
+		wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("loaderDiv")));
+
+		// --Scroll to get Rate
 		jse.executeScript("window.scrollBy(0,400)", "");
-		String cost = driver.findElement(By.id("lblActualRate")).getText();
-		excelDataProvider.writeData("Sheet1", 1, 31, cost);
-		Thread.sleep(2000);
-		WebElement idJob = wait.until(ExpectedConditions.elementToBeClickable(By.xpath(".//*[@id='idJobOverview']")));
+		String cost = isElementPresent("TLActualRate_id").getText();
+		setData("Sheet1", 1, 31, cost);
+		logs.info("Scroll down to Get the Rate");
+
+		// --Moved to Job Status
+		WebElement idJob = isElementPresent("TLJobStatusTab_id");
+		wait.until(ExpectedConditions.elementToBeClickable(idJob));
 		jse.executeScript("arguments[0].click();", idJob);
+		logs.info("Clicked on Job Status Tab");
+		wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("loaderDiv")));
 
 		// TC Acknowledge
-		Thread.sleep(7000);
 		TCAcknowledge.tcAcknowledge();
 
 		// Pickup Alert
-		Thread.sleep(7000);
 		ReadyForDispatch.pickupAlert();
 
 		// PICKEDUP
-		Thread.sleep(3000);
 		Pickup.confirmPickup();
 
 		// DELIVERED
-		Thread.sleep(3000);
 		Deliver.confirmDelivery();
 
-		Thread.sleep(3000);
 	}
 }

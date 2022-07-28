@@ -200,6 +200,8 @@ public class ServiceDetail extends BaseInit {
 
 			// --Total Qty
 			isElementPresent("OCTotalQty_id").clear();
+			isElementPresent("OCTotalQty_id").sendKeys(Keys.BACK_SPACE);
+			isElementPresent("OCTotalQty_id").sendKeys(Keys.BACK_SPACE);
 			isElementPresent("OCTotalQty_id").sendKeys("1");
 			isElementPresent("OCTotalQty_id").sendKeys(Keys.TAB);
 			logs.info("Entered Total Qty");
