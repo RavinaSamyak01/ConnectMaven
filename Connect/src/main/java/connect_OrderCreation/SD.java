@@ -3,6 +3,8 @@ package connect_OrderCreation;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.Test;
 
 import connect_OCBaseMethods.Board;
@@ -24,13 +26,14 @@ import connect_OCBaseMethods.XerWaitForDeparture;
 public class SD extends ServiceDetail {
 	@Test
 	public static void sdSameDay() throws Exception {
-		JavascriptExecutor jse = (JavascriptExecutor) driver;
+		JavascriptExecutor jse = (JavascriptExecutor) driver;// scroll,click
+		WebDriverWait wait = new WebDriverWait(driver, 50);// wait time
 
-		Thread.sleep(3000);
-		WebElement order = driver.findElement(By.id("btnOrderProcess"));
+		// --Click on Create Order button
+		WebElement order = isElementPresent("OCOProcess_id");
+		wait.until(ExpectedConditions.elementToBeClickable(order));
 		jse.executeScript("arguments[0].click();", order);
-
-		Thread.sleep(9000);
+		wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("loaderDiv")));
 
 		boolean sameairport = driver.getPageSource()
 				.contains("Pickup and Delivery airport are different. Do you want to make it same?");
@@ -39,28 +42,34 @@ public class SD extends ServiceDetail {
 			driver.findElement(By.xpath("/html/body/div[11]/div/div/div/div/div/div[2]/span/button[1]")).click();
 		}
 
-		String pck = driver.findElement(By.xpath("//*[@id='lblPickup']/span/b")).getText();
+		// --Get the PickUPID
+		WebElement PickUPID = isElementPresent("OCPickuPID_xpath");
+		wait.until(ExpectedConditions.elementToBeClickable(PickUPID));
+		String pck = PickUPID.getText();
 		System.out.println("Service SD :: Pickup # " + pck);
 		logs.info("Service SD :: Pickup # " + pck + "\n");
+		msg.append("Service SD :: Pickup # " + pck + "\n\n");
 
-		Thread.sleep(1000);
+		// --Set PickUPID
+		setData("Sheet1", 2, 32, pck);
 
-		ExcelDataProvider excelDataProvider = new ExcelDataProvider();
-		excelDataProvider.writeData("Sheet1", 2, 32, pck);
+		// --Click on Edit Order
+		WebElement EditOrder = isElementPresent("OCEditOrder_id");
+		EditOrder.click();
+		logs.info("Clicked on Edit Order");
+		wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("loaderDiv")));
 
-		Thread.sleep(5000);
-		driver.findElement(By.xpath(".//*[@id='hlkGoDirectlytoEditOrder']")).click();
-		Thread.sleep(9000);
-
+		// --Unknown Shipper click
 		driver.findElement(By.id("idEditSendByAir")).click();
 		Thread.sleep(7000);
 		driver.findElement(By.id("btnConfirmExtrernal")).click();
 		Thread.sleep(10000);
 
+		// --Scroll to get Rate
 		jse.executeScript("window.scrollBy(0,400)", "");
-		String cost = driver.findElement(By.id("lblActualRate")).getText();
-		excelDataProvider.writeData("Sheet1", 2, 31, cost);
-		Thread.sleep(5000);
+		String cost = isElementPresent("TLActualRate_id").getText();
+		setData("Sheet1", 2, 31, cost);
+		logs.info("Scroll down to Get the Rate");
 
 		driver.findElement(By.id("btnSaveChanges")).click();
 		Thread.sleep(7000);

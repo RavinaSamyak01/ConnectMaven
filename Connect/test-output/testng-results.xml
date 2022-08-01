@@ -2,32 +2,31 @@
 <testng-results ignored="0" total="1" passed="0" failed="0" skipped="1">
   <reporter-output>
   </reporter-output>
-  <suite started-at="2022-07-27T17:17:26 IST" name="Default suite" finished-at="2022-07-27T17:17:26 IST" duration-ms="99">
+  <suite started-at="2022-07-28T10:23:18 IST" name="Default suite" finished-at="2022-07-28T10:23:18 IST" duration-ms="71">
     <groups>
     </groups>
-    <test started-at="2022-07-27T17:17:26 IST" name="Default test" finished-at="2022-07-27T17:17:26 IST" duration-ms="99">
+    <test started-at="2022-07-28T10:23:18 IST" name="Default test" finished-at="2022-07-28T10:23:18 IST" duration-ms="71">
       <class name="connect_OCBaseMethods.ServiceDetail">
-        <test-method is-config="true" signature="beforeMethod()[pri:0, instance:connect_OCBaseMethods.ServiceDetail@29215f06]" started-at="2022-07-27T17:15:20 IST" name="beforeMethod" finished-at="2022-07-27T17:17:26 IST" duration-ms="126484" status="FAIL">
+        <test-method is-config="true" signature="beforeMethod()[pri:0, instance:connect_OCBaseMethods.ServiceDetail@29215f06]" started-at="2022-07-28T10:22:15 IST" name="beforeMethod" finished-at="2022-07-28T10:23:18 IST" duration-ms="62609" status="FAIL">
           <exception class="org.openqa.selenium.TimeoutException">
             <message>
-              <![CDATA[Expected condition failed: waiting for element to no longer be visible: By.xpath: //input[contains(@class,'ng-invalid ng-invalid-required')] (tried for 50 second(s) with 500 milliseconds interval)
+              <![CDATA[Expected condition failed: waiting for element to no longer be visible: By.xpath: //span[contains(text(),'Logging In...')] (tried for 50 second(s) with 500 milliseconds interval)
 Build info: version: '3.141.59', revision: 'e82be7d358', time: '2018-11-14T08:17:03'
-System info: host: 'SIPL92', ip: '10.212.140.33', os.name: 'Windows 10', os.arch: 'amd64', os.version: '10.0', java.version: '16.0.2'
+System info: host: 'SIPL92', ip: '10.212.140.25', os.name: 'Windows 10', os.arch: 'amd64', os.version: '10.0', java.version: '16.0.2'
 Driver info: org.openqa.selenium.chrome.ChromeDriver
-Capabilities {acceptInsecureCerts: false, browserName: chrome, browserVersion: 103.0.5060.134, chrome: {chromedriverVersion: 103.0.5060.134 (8ec6fce403b..., userDataDir: C:\Users\RPRAJA~1\AppData\L...}, goog:chromeOptions: {debuggerAddress: localhost:51848}, javascriptEnabled: true, networkConnectionEnabled: false, pageLoadStrategy: normal, platform: WINDOWS, platformName: WINDOWS, proxy: Proxy(), setWindowRect: true, strictFileInteractability: false, timeouts: {implicit: 0, pageLoad: 300000, script: 30000}, unhandledPromptBehavior: dismiss and notify, webauthn:extension:credBlob: true, webauthn:extension:largeBlob: true, webauthn:virtualAuthenticators: true}
-Session ID: 2fbfb490f24e64aafc8a31ad390022b6]]>
+Capabilities {acceptInsecureCerts: false, browserName: chrome, browserVersion: 103.0.5060.134, chrome: {chromedriverVersion: 103.0.5060.134 (8ec6fce403b..., userDataDir: C:\Users\RPRAJA~1\AppData\L...}, goog:chromeOptions: {debuggerAddress: localhost:59717}, javascriptEnabled: true, networkConnectionEnabled: false, pageLoadStrategy: normal, platform: WINDOWS, platformName: WINDOWS, proxy: Proxy(), setWindowRect: true, strictFileInteractability: false, timeouts: {implicit: 0, pageLoad: 300000, script: 30000}, unhandledPromptBehavior: dismiss and notify, webauthn:extension:credBlob: true, webauthn:extension:largeBlob: true, webauthn:virtualAuthenticators: true}
+Session ID: 1869a70fe0ad9913e11f1a6be7cda510]]>
             </message>
             <full-stacktrace>
-              <![CDATA[org.openqa.selenium.TimeoutException: Expected condition failed: waiting for element to no longer be visible: By.xpath: //input[contains(@class,'ng-invalid ng-invalid-required')] (tried for 50 second(s) with 500 milliseconds interval)
+              <![CDATA[org.openqa.selenium.TimeoutException: Expected condition failed: waiting for element to no longer be visible: By.xpath: //span[contains(text(),'Logging In...')] (tried for 50 second(s) with 500 milliseconds interval)
 Build info: version: '3.141.59', revision: 'e82be7d358', time: '2018-11-14T08:17:03'
-System info: host: 'SIPL92', ip: '10.212.140.33', os.name: 'Windows 10', os.arch: 'amd64', os.version: '10.0', java.version: '16.0.2'
+System info: host: 'SIPL92', ip: '10.212.140.25', os.name: 'Windows 10', os.arch: 'amd64', os.version: '10.0', java.version: '16.0.2'
 Driver info: org.openqa.selenium.chrome.ChromeDriver
-Capabilities {acceptInsecureCerts: false, browserName: chrome, browserVersion: 103.0.5060.134, chrome: {chromedriverVersion: 103.0.5060.134 (8ec6fce403b..., userDataDir: C:\Users\RPRAJA~1\AppData\L...}, goog:chromeOptions: {debuggerAddress: localhost:51848}, javascriptEnabled: true, networkConnectionEnabled: false, pageLoadStrategy: normal, platform: WINDOWS, platformName: WINDOWS, proxy: Proxy(), setWindowRect: true, strictFileInteractability: false, timeouts: {implicit: 0, pageLoad: 300000, script: 30000}, unhandledPromptBehavior: dismiss and notify, webauthn:extension:credBlob: true, webauthn:extension:largeBlob: true, webauthn:virtualAuthenticators: true}
-Session ID: 2fbfb490f24e64aafc8a31ad390022b6
+Capabilities {acceptInsecureCerts: false, browserName: chrome, browserVersion: 103.0.5060.134, chrome: {chromedriverVersion: 103.0.5060.134 (8ec6fce403b..., userDataDir: C:\Users\RPRAJA~1\AppData\L...}, goog:chromeOptions: {debuggerAddress: localhost:59717}, javascriptEnabled: true, networkConnectionEnabled: false, pageLoadStrategy: normal, platform: WINDOWS, platformName: WINDOWS, proxy: Proxy(), setWindowRect: true, strictFileInteractability: false, timeouts: {implicit: 0, pageLoad: 300000, script: 30000}, unhandledPromptBehavior: dismiss and notify, webauthn:extension:credBlob: true, webauthn:extension:largeBlob: true, webauthn:virtualAuthenticators: true}
+Session ID: 1869a70fe0ad9913e11f1a6be7cda510
 at org.openqa.selenium.support.ui.WebDriverWait.timeoutException(WebDriverWait.java:95)
 at org.openqa.selenium.support.ui.FluentWait.until(FluentWait.java:272)
-at connect_OCBaseMethods.ServiceDetail.SvcDetail(ServiceDetail.java:128)
-at connect_BasePackage.BaseInit.login(BaseInit.java:408)
+at connect_BasePackage.BaseInit.login(BaseInit.java:389)
 at connect_BasePackage.BaseInit.beforeMethod(BaseInit.java:118)
 at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:78)
@@ -54,31 +53,30 @@ at org.testng.remote.RemoteTestNG.main(RemoteTestNG.java:77)
           <reporter-output>
           </reporter-output>
         </test-method> <!-- beforeMethod -->
-        <test-method is-config="true" signature="testMethodName(java.lang.reflect.Method)[pri:0, instance:connect_OCBaseMethods.ServiceDetail@29215f06]" started-at="2022-07-27T17:17:26 IST" name="testMethodName" finished-at="1970-01-01T05:30:00 IST" duration-ms="-1658922446699" status="SKIP">
+        <test-method is-config="true" signature="testMethodName(java.lang.reflect.Method)[pri:0, instance:connect_OCBaseMethods.ServiceDetail@29215f06]" started-at="2022-07-28T10:23:18 IST" name="testMethodName" finished-at="1970-01-01T05:30:00 IST" duration-ms="-1658983998213" status="SKIP">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- testMethodName -->
-        <test-method signature="SvcDetail()[pri:0, instance:connect_OCBaseMethods.ServiceDetail@29215f06]" started-at="2022-07-27T17:17:26 IST" name="SvcDetail" finished-at="2022-07-27T17:17:26 IST" duration-ms="0" status="SKIP">
+        <test-method signature="SvcDetail()[pri:0, instance:connect_OCBaseMethods.ServiceDetail@29215f06]" started-at="2022-07-28T10:23:18 IST" name="SvcDetail" finished-at="2022-07-28T10:23:18 IST" duration-ms="0" status="SKIP">
           <exception class="org.openqa.selenium.TimeoutException">
             <message>
-              <![CDATA[Expected condition failed: waiting for element to no longer be visible: By.xpath: //input[contains(@class,'ng-invalid ng-invalid-required')] (tried for 50 second(s) with 500 milliseconds interval)
+              <![CDATA[Expected condition failed: waiting for element to no longer be visible: By.xpath: //span[contains(text(),'Logging In...')] (tried for 50 second(s) with 500 milliseconds interval)
 Build info: version: '3.141.59', revision: 'e82be7d358', time: '2018-11-14T08:17:03'
-System info: host: 'SIPL92', ip: '10.212.140.33', os.name: 'Windows 10', os.arch: 'amd64', os.version: '10.0', java.version: '16.0.2'
+System info: host: 'SIPL92', ip: '10.212.140.25', os.name: 'Windows 10', os.arch: 'amd64', os.version: '10.0', java.version: '16.0.2'
 Driver info: org.openqa.selenium.chrome.ChromeDriver
-Capabilities {acceptInsecureCerts: false, browserName: chrome, browserVersion: 103.0.5060.134, chrome: {chromedriverVersion: 103.0.5060.134 (8ec6fce403b..., userDataDir: C:\Users\RPRAJA~1\AppData\L...}, goog:chromeOptions: {debuggerAddress: localhost:51848}, javascriptEnabled: true, networkConnectionEnabled: false, pageLoadStrategy: normal, platform: WINDOWS, platformName: WINDOWS, proxy: Proxy(), setWindowRect: true, strictFileInteractability: false, timeouts: {implicit: 0, pageLoad: 300000, script: 30000}, unhandledPromptBehavior: dismiss and notify, webauthn:extension:credBlob: true, webauthn:extension:largeBlob: true, webauthn:virtualAuthenticators: true}
-Session ID: 2fbfb490f24e64aafc8a31ad390022b6]]>
+Capabilities {acceptInsecureCerts: false, browserName: chrome, browserVersion: 103.0.5060.134, chrome: {chromedriverVersion: 103.0.5060.134 (8ec6fce403b..., userDataDir: C:\Users\RPRAJA~1\AppData\L...}, goog:chromeOptions: {debuggerAddress: localhost:59717}, javascriptEnabled: true, networkConnectionEnabled: false, pageLoadStrategy: normal, platform: WINDOWS, platformName: WINDOWS, proxy: Proxy(), setWindowRect: true, strictFileInteractability: false, timeouts: {implicit: 0, pageLoad: 300000, script: 30000}, unhandledPromptBehavior: dismiss and notify, webauthn:extension:credBlob: true, webauthn:extension:largeBlob: true, webauthn:virtualAuthenticators: true}
+Session ID: 1869a70fe0ad9913e11f1a6be7cda510]]>
             </message>
             <full-stacktrace>
-              <![CDATA[org.openqa.selenium.TimeoutException: Expected condition failed: waiting for element to no longer be visible: By.xpath: //input[contains(@class,'ng-invalid ng-invalid-required')] (tried for 50 second(s) with 500 milliseconds interval)
+              <![CDATA[org.openqa.selenium.TimeoutException: Expected condition failed: waiting for element to no longer be visible: By.xpath: //span[contains(text(),'Logging In...')] (tried for 50 second(s) with 500 milliseconds interval)
 Build info: version: '3.141.59', revision: 'e82be7d358', time: '2018-11-14T08:17:03'
-System info: host: 'SIPL92', ip: '10.212.140.33', os.name: 'Windows 10', os.arch: 'amd64', os.version: '10.0', java.version: '16.0.2'
+System info: host: 'SIPL92', ip: '10.212.140.25', os.name: 'Windows 10', os.arch: 'amd64', os.version: '10.0', java.version: '16.0.2'
 Driver info: org.openqa.selenium.chrome.ChromeDriver
-Capabilities {acceptInsecureCerts: false, browserName: chrome, browserVersion: 103.0.5060.134, chrome: {chromedriverVersion: 103.0.5060.134 (8ec6fce403b..., userDataDir: C:\Users\RPRAJA~1\AppData\L...}, goog:chromeOptions: {debuggerAddress: localhost:51848}, javascriptEnabled: true, networkConnectionEnabled: false, pageLoadStrategy: normal, platform: WINDOWS, platformName: WINDOWS, proxy: Proxy(), setWindowRect: true, strictFileInteractability: false, timeouts: {implicit: 0, pageLoad: 300000, script: 30000}, unhandledPromptBehavior: dismiss and notify, webauthn:extension:credBlob: true, webauthn:extension:largeBlob: true, webauthn:virtualAuthenticators: true}
-Session ID: 2fbfb490f24e64aafc8a31ad390022b6
+Capabilities {acceptInsecureCerts: false, browserName: chrome, browserVersion: 103.0.5060.134, chrome: {chromedriverVersion: 103.0.5060.134 (8ec6fce403b..., userDataDir: C:\Users\RPRAJA~1\AppData\L...}, goog:chromeOptions: {debuggerAddress: localhost:59717}, javascriptEnabled: true, networkConnectionEnabled: false, pageLoadStrategy: normal, platform: WINDOWS, platformName: WINDOWS, proxy: Proxy(), setWindowRect: true, strictFileInteractability: false, timeouts: {implicit: 0, pageLoad: 300000, script: 30000}, unhandledPromptBehavior: dismiss and notify, webauthn:extension:credBlob: true, webauthn:extension:largeBlob: true, webauthn:virtualAuthenticators: true}
+Session ID: 1869a70fe0ad9913e11f1a6be7cda510
 at org.openqa.selenium.support.ui.WebDriverWait.timeoutException(WebDriverWait.java:95)
 at org.openqa.selenium.support.ui.FluentWait.until(FluentWait.java:272)
-at connect_OCBaseMethods.ServiceDetail.SvcDetail(ServiceDetail.java:128)
-at connect_BasePackage.BaseInit.login(BaseInit.java:408)
+at connect_BasePackage.BaseInit.login(BaseInit.java:389)
 at connect_BasePackage.BaseInit.beforeMethod(BaseInit.java:118)
 at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:78)
@@ -105,11 +103,11 @@ at org.testng.remote.RemoteTestNG.main(RemoteTestNG.java:77)
           <reporter-output>
           </reporter-output>
         </test-method> <!-- SvcDetail -->
-        <test-method is-config="true" signature="getResult(org.testng.ITestResult)[pri:0, instance:connect_OCBaseMethods.ServiceDetail@29215f06]" started-at="2022-07-27T17:17:26 IST" name="getResult" finished-at="1970-01-01T05:30:00 IST" duration-ms="-1658922446709" status="SKIP">
+        <test-method is-config="true" signature="getResult(org.testng.ITestResult)[pri:0, instance:connect_OCBaseMethods.ServiceDetail@29215f06]" started-at="2022-07-28T10:23:18 IST" name="getResult" finished-at="1970-01-01T05:30:00 IST" duration-ms="-1658983998225" status="SKIP">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- getResult -->
-        <test-method is-config="true" signature="SendEmail()[pri:0, instance:connect_OCBaseMethods.ServiceDetail@29215f06]" started-at="2022-07-27T17:17:26 IST" name="SendEmail" finished-at="1970-01-01T05:30:00 IST" duration-ms="-1658922446795" status="SKIP">
+        <test-method is-config="true" signature="SendEmail()[pri:0, instance:connect_OCBaseMethods.ServiceDetail@29215f06]" started-at="2022-07-28T10:23:18 IST" name="SendEmail" finished-at="1970-01-01T05:30:00 IST" duration-ms="-1658983998308" status="SKIP">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- SendEmail -->
