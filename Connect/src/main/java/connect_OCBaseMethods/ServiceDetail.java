@@ -25,7 +25,7 @@ public class ServiceDetail extends BaseInit {
 	static String pck, rdytime, rectime, arrtime, tndrtime;
 
 	@Test
-	public static void SvcDetail() throws Exception {
+	public void SvcDetail() throws Exception {
 		JavascriptExecutor jse = (JavascriptExecutor) driver;// scroll,click
 		WebDriverWait wait = new WebDriverWait(driver, 50);// wait time
 //		/Actions act = new Actions(driver);
@@ -200,10 +200,12 @@ public class ServiceDetail extends BaseInit {
 
 			// --Total Qty
 			isElementPresent("OCTotalQty_id").clear();
-			isElementPresent("OCTotalQty_id").sendKeys(Keys.BACK_SPACE);
+			// isElementPresent("OCTotalQty_id").sendKeys(Keys.BACK_SPACE);
+			isElementPresent("OCTotalQty_id").sendKeys(Keys.CONTROL, "a");
 			isElementPresent("OCTotalQty_id").sendKeys(Keys.BACK_SPACE);
 			isElementPresent("OCTotalQty_id").sendKeys("1");
 			isElementPresent("OCTotalQty_id").sendKeys(Keys.TAB);
+			Thread.sleep(2000);
 			logs.info("Entered Total Qty");
 
 			// --Weight
@@ -262,7 +264,8 @@ public class ServiceDetail extends BaseInit {
 				msg.append("DL Mileage=" + dmi + "\n");
 				msg.append("Total Mileage=" + tmile + "\n\n");
 
-				LOC.locLocal();
+				LOC loc=new LOC();
+				loc.locLocal();
 
 			}
 

@@ -47,7 +47,6 @@ import com.relevantcodes.extentreports.ExtentReports;
 import com.relevantcodes.extentreports.ExtentTest;
 import com.relevantcodes.extentreports.LogStatus;
 
-import connect_OCBaseMethods.ServiceDetail;
 import io.github.bonigarcia.wdm.WebDriverManager;
 
 public class BaseInit {
@@ -60,6 +59,7 @@ public class BaseInit {
 	public static ExtentReports report;
 	public static ExtentTest test;
 	String BaseURL;
+
 	@BeforeSuite
 	public void beforeMethod() throws Exception {
 		if (driver == null) {
@@ -83,7 +83,7 @@ public class BaseInit {
 			options.addArguments("--proxy-bypass-list=*");
 			options.addArguments("--disable-extensions");
 			options.addArguments("--no-sandbox");
-			//options.addArguments("window-size=1036,776");
+			// options.addArguments("window-size=1036,776");
 			options.addArguments("--start-maximized");
 			String downloadFilepath = System.getProperty("user.dir") + "\\src\\main\\resources";
 			HashMap<String, Object> chromePrefs = new HashMap<String, Object>();
@@ -263,7 +263,7 @@ public class BaseInit {
 		String Env = storage.getProperty("Env");
 		String baseUrl = null;
 		if (Env.equalsIgnoreCase("Pre-Prod")) {
-			 baseUrl = storage.getProperty("PREPRODURL");
+			baseUrl = storage.getProperty("PREPRODURL");
 			driver.get(baseUrl);
 			Thread.sleep(2000);
 			try {
@@ -303,7 +303,7 @@ public class BaseInit {
 			}
 
 		} else if (Env.equalsIgnoreCase("STG")) {
-			 baseUrl = storage.getProperty("STGURL");
+			baseUrl = storage.getProperty("STGURL");
 			driver.get(baseUrl);
 			Thread.sleep(2000);
 			try {
@@ -342,7 +342,7 @@ public class BaseInit {
 			}
 
 		} else if (Env.equalsIgnoreCase("DEV")) {
-			 baseUrl = storage.getProperty("DEVURL");
+			baseUrl = storage.getProperty("DEVURL");
 			driver.get(baseUrl);
 			Thread.sleep(2000);
 			try {
@@ -380,8 +380,8 @@ public class BaseInit {
 
 			}
 		}
-		
-		BaseURL=baseUrl;
+
+		BaseURL = baseUrl;
 		highLight(isElementPresent("Login_id"), driver);
 		isElementPresent("Login_id").click();
 		logs.info("Login done");
@@ -403,9 +403,6 @@ public class BaseInit {
 		act.moveToElement(TaskLog).click().build().perform();
 		wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("loaderDiv")));
 		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("txtContains")));
-
-		// Move to ServiceDetail Class
-		ServiceDetail.SvcDetail();
 
 	}
 
@@ -626,7 +623,7 @@ public class BaseInit {
 
 		String Env = storage.getProperty("Env");
 		String subject = "Selenium Automation Script:" + Env + " Connect Order Creation&Processing";
-		String File = ".\\Report\\ExtentReport\\ExtentReportResults.html,.\\Report\\log\\RTESmoke.html";
+		String File = ".\\Report\\ExtentReport\\ExtentReportResults.html,.\\Report\\log\\ConnectOrderProcessing.html";
 
 		try {
 //			/kunjan.modi@samyak.com, pgandhi@samyak.com,parth.doshi@samyak.com

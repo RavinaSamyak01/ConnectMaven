@@ -47,8 +47,8 @@ public class ReadyForDispatch extends BaseInit {
 		spoke.sendKeys("Ravina");
 		logs.info("Entered Spoke With");
 
-		// --Click on Send PU Alert
-		WebElement Sendpualert = isElementPresent("TLRDSPUALert_id");
+		// --Click on Alert and Confirm
+		WebElement Sendpualert = isElementPresent("TLRDAlConfrm_id");
 		wait.until(ExpectedConditions.elementToBeClickable(Sendpualert));
 		Sendpualert.click();
 		logs.info("Clicked on Send Pu Alert button");
